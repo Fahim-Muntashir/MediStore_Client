@@ -13,8 +13,10 @@ const navLinks = [
   { name: "Contact", href: "#" },
 ];
 
-export function Header() {
+export function Header({ data }: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  console.log(data);
+  const userInfo = data?.user;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -40,27 +42,30 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Button variant={"outline"}>
-              <Link type="button" href={"/login"}>
-                Login
-              </Link>
-            </Button>
-            <Button>
-              <Link type="button" href={"/register"}>
-                Register{" "}
-              </Link>
-            </Button>
-            {/* <Button variant="ghost" size="icon" className="hidden sm:flex">
-              <User className="h-5 w-5" />
-              <span className="sr-only">Account</span>
-            </Button>
-            <Button variant="ghost" size="icon" className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Cart</span>
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                0
-              </span>
-            </Button> */}
+            {!data ? (
+              <>
+                <Button variant="outline">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button>
+                  <Link href="/register">Register</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="icon" className="hidden sm:flex">
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">Account</span>
+                </Button>
+                <Button variant="ghost" size="icon" className="relative">
+                  <ShoppingCart className="h-5 w-5" />
+                  <span className="sr-only">Cart</span>
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
+                    0
+                  </span>
+                </Button>
+              </>
+            )}
             <Button
               variant="ghost"
               size="icon"
