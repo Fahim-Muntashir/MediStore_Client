@@ -4,6 +4,7 @@ import { Pill, ShoppingCart, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { name: "Home", href: "#" },
@@ -17,6 +18,7 @@ export function Header({ data }: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   console.log(data);
   const userInfo = data?.user;
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -53,10 +55,53 @@ export function Header({ data }: any) {
               </>
             ) : (
               <>
-                <Button variant="ghost" size="icon" className="hidden sm:flex">
-                  <User className="h-5 w-5" />
-                  <span className="sr-only">Account</span>
-                </Button>
+                {/* Account Button with Hover Dropdown */}
+                <div
+                  className="relative hidden sm:flex"
+                  onMouseEnter={() => setDropdownOpen(true)}
+                  onMouseLeave={() => setDropdownOpen(false)}
+                >
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                    <span className="sr-only">Account</span>
+                  </Button>
+
+                  {/* Dropdown */}
+                  {isDropdownOpen && (
+                    <div className="absolute right-[-10] mt-6 w-48 rounded-md bg-white shadow-lg z-10">
+                      <div className="py-2">
+                        <span className="block px-4 py-2 text-sm text-gray-700">
+                          Hi, Fahim
+                        </span>
+                        <a
+                          href="/dashboard"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Dashboard
+                        </a>
+                      </div>
+                      {/* Logout Button */}
+                      <button
+                        onClick={async () => {
+                          try {
+                            // Sign the user out
+                            await authClient.signOut();
+
+                            // Redirect to home page after logout
+                            window.location.href = "/";
+                          } catch (err) {
+                            console.error("Logout failed:", err);
+                          }
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Cart Button */}
                 <Button variant="ghost" size="icon" className="relative">
                   <ShoppingCart className="h-5 w-5" />
                   <span className="sr-only">Cart</span>
