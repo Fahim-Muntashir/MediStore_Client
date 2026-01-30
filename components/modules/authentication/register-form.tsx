@@ -19,10 +19,12 @@ import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 
 const formSchema = z.object({
-  name: z.string().min(1, "this field is required"),
+  name: z.string().min(1, "This field is required"),
+  email: z.string().email("Invalid email"),
   password: z.string().min(8, "Min length 8"),
-  email: z.email(),
+  role: z.enum(["CUSTOMER", "SELLER"], "Please select a role"),
 });
+
 const handleGoogleLogin = async () => {
   const data = authClient.signIn.social({
     provider: "google",
@@ -38,6 +40,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       email: "",
       password: "",
+      role: "CUSTOMER", // default value lives here
     },
     validators: {
       onSubmit: formSchema,
@@ -45,6 +48,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Creating user");
       try {
+        console.log(value);
         const { data, error } = await authClient.signUp.email(value);
         console.log(data);
         if (error) {
@@ -53,8 +57,10 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
           });
           return;
         }
+        router.refresh();
 
         toast.success("user created succesfully", { id: toastId });
+
         router.push("/");
       } catch (error) {
         toast.error("Something went wrong", { id: toastId });
@@ -143,6 +149,32 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                         field.handleChange(e.target.value);
                       }}
                     />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </Field>
+                );
+              }}
+            />
+
+            <form.Field
+              name="role"
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <Field>
+                    <FieldLabel htmlFor={field.name}>Role</FieldLabel>
+                    <select
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value || "customer"}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="w-full border rounded px-3 py-2"
+                    >
+                      <option value="customer">Customer</option>
+                      <option value="seller">Seller</option>
+                    </select>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
