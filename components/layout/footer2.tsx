@@ -1,8 +1,7 @@
-import { cn } from "@/lib/utils";
-
 import { Logo, LogoImage, LogoText } from "@/components/logo";
 import Link from "next/link";
 import { Pill } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MenuItem {
   title: string;

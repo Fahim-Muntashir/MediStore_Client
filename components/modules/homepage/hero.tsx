@@ -1,9 +1,10 @@
 "use client";
 
 import { Search, ShoppingCart, CheckCircle, Truck, Pill } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
 import { useState } from "react";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 
 export function HeroSection() {
   const [searchQuery, setSearchQuery] = useState("");

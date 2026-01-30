@@ -7,7 +7,7 @@ import {
   HeartPulse,
   Baby,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "../../ui/card";
 
 interface Category {
   name: string;

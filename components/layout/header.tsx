@@ -40,7 +40,17 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
+            <Button variant={"outline"}>
+              <Link type="button" href={"/login"}>
+                Login
+              </Link>
+            </Button>
+            <Button>
+              <Link type="button" href={"/register"}>
+                Register{" "}
+              </Link>
+            </Button>
+            {/* <Button variant="ghost" size="icon" className="hidden sm:flex">
               <User className="h-5 w-5" />
               <span className="sr-only">Account</span>
             </Button>
@@ -50,7 +60,7 @@ export function Header() {
               <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
                 0
               </span>
-            </Button>
+            </Button> */}
             <Button
               variant="ghost"
               size="icon"
