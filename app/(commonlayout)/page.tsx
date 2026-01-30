@@ -1,5 +1,13 @@
+import { CategoriesSection } from "@/components/modules/homepage/category-section";
+import { HeroSection } from "@/components/modules/homepage/hero";
+import { WhyChooseSection } from "@/components/modules/homepage/WhyChooseSection";
+
 export default async function Home() {
   return (
-    <div className="grid grid-cols-3 max-w-7xl mx-auto px-4 gap-6">hello</div>
+    <div>
+      <HeroSection></HeroSection>
+      <CategoriesSection />
+      <WhyChooseSection />
+    </div>
   );
 }
