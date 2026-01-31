@@ -77,14 +77,14 @@ const Footer2 = ({
       ],
     },
   ],
-  copyright = "© 2024 Shadcnblocks.com. All rights reserved.",
+  copyright = "© 2024 medistore.com. All rights reserved.",
   bottomLinks = [
     { text: "Terms and Conditions", url: "#" },
     { text: "Privacy Policy", url: "#" },
   ],
 }: Footer2Props) => {
   return (
-    <section className={cn("py-32", className)}>
+    <section className={cn("py-32 px-10", className)}>
       <div className="container mx-auto">
         <footer>
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">

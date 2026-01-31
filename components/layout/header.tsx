@@ -57,7 +57,7 @@ export function Header({ data }: any) {
               <>
                 {/* Account Button with Hover Dropdown */}
                 <div
-                  className="relative hidden sm:flex"
+                  className="relative  sm:flex"
                   onMouseEnter={() => setDropdownOpen(true)}
                   onMouseLeave={() => setDropdownOpen(false)}
                 >
@@ -93,7 +93,7 @@ export function Header({ data }: any) {
                             console.error("Logout failed:", err);
                           }
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm font-bold text-red-600 cursor-pointer hover:bg-gray-100"
                       >
                         Logout
                       </button>

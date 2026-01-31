@@ -167,12 +167,12 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                     <select
                       id={field.name}
                       name={field.name}
-                      value={field.state.value || "customer"}
+                      value={field.state.value || "CUSTOMER"}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className="w-full border rounded px-3 py-2"
                     >
-                      <option value="customer">Customer</option>
-                      <option value="seller">Seller</option>
+                      <option value="CUSTOMER">Customer</option>
+                      <option value="SELLER">Seller</option>
                     </select>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
