@@ -6,45 +6,66 @@ export const sellerRoutes: Route[] = [
     items: [
       {
         title: "Overview",
-        url: "/seller",
+        url: "/dashboard/dashboard",
       },
       {
         title: "Analytics",
-        url: "/seller/analytics",
+        url: "/dashboard/analytics",
       },
     ],
   },
   {
-    title: "Blog Management",
+    title: "Medicine Management",
     items: [
       {
-        title: "Create Blog",
-        url: "/seller/blog/create",
+        title: "Add Medicine",
+        url: "/dashboard/add-medicine",
       },
       {
-        title: "My Blogs",
-        url: "/seller/blogs",
+        title: "My Medicines",
+        url: "/dashboard/medicines",
       },
       {
-        title: "Drafts",
-        url: "/seller/blogs/drafts",
+        title: "Out of Stock",
+        url: "/dashboard/medicines/out-of-stock",
       },
       {
-        title: "History",
-        url: "/seller/blogs/history",
+        title: "Medicine History",
+        url: "/dashboard/medicines/history",
       },
     ],
   },
   {
-    title: "Content",
+    title: "Orders",
     items: [
       {
-        title: "Comments",
-        url: "/seller/comments",
+        title: "All Orders",
+        url: "/dashboard/orders",
+      },
+      {
+        title: "Pending Orders",
+        url: "/dashboard/orders/pending",
+      },
+      {
+        title: "Completed Orders",
+        url: "/dashboard/orders/completed",
+      },
+      {
+        title: "Cancelled Orders",
+        url: "/dashboard/orders/cancelled",
+      },
+    ],
+  },
+  {
+    title: "Inventory",
+    items: [
+      {
+        title: "Stock Management",
+        url: "/dashboard/inventory",
       },
       {
         title: "Categories",
-        url: "/seller/categories",
+        url: "/dashboard/categories",
       },
     ],
   },
@@ -53,11 +74,11 @@ export const sellerRoutes: Route[] = [
     items: [
       {
         title: "Profile",
-        url: "/seller/profile",
+        url: "/dashboard/profile",
       },
       {
         title: "Settings",
-        url: "/seller/settings",
+        url: "/dashboard/settings",
       },
     ],
   },

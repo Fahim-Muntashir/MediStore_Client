@@ -1,12 +1,4 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -18,22 +10,21 @@ import { userService } from "@/services/user.service";
 
 export default async function DashboardLayout({
   admin,
-  user,
+  customer,
+  seller,
 }: {
-  children: React.ReactNode;
   admin: React.ReactNode;
-  user: React.ReactNode;
+  customer: React.ReactNode;
+  seller: React.ReactNode;
 }) {
-  // const userInfo = {
-  //   role: "admin",
-  // };
-
   const { data } = await userService.getSession();
 
-  console.log(data);
+  const userInfo = data?.user;
 
-  console.log(data);
-  const userInfo = data.user;
+  if (!userInfo) {
+    return <div>Unauthorized</div>;
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar user={userInfo} />
@@ -45,8 +36,11 @@ export default async function DashboardLayout({
             className="mr-2 data-[orientation=vertical]:h-4"
           />
         </header>
+
         <div className="flex flex-1 flex-col gap-4 p-4">
-          {userInfo.role === Roles.admin ? admin : user}
+          {userInfo.role === Roles.admin && admin}
+          {userInfo.role === Roles.customer && customer}
+          {userInfo.role === Roles.seller && seller}
         </div>
       </SidebarInset>
     </SidebarProvider>
