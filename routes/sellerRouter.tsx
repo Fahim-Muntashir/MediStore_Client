@@ -9,8 +9,8 @@ export const sellerRoutes: Route[] = [
         url: "/dashboard/dashboard",
       },
       {
-        title: "Analytics",
-        url: "/dashboard/analytics",
+        title: "Home",
+        url: "/",
       },
     ],
   },

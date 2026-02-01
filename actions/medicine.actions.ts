@@ -5,7 +5,7 @@ import { updateTag } from "next/cache";
 
 // Fetch all medicines
 export const getMedicines = async () => {
-  return await medicineService.getMedicines();
+  return await medicineService.getSellerMedicines();
 };
 
 // Create a new medicine
@@ -27,6 +27,11 @@ export const updateMedicine = async (id: string, data: MedicineData) => {
 export const deleteMedicine = async (id: string) => {
   const res = await medicineService.deleteMedicine(id);
   updateTag("blogPosts"); // invalidate cache
+  console.log(res);
+  return res;
+};
+export const fetchAllMedicines = async () => {
+  const res = await medicineService.getAllMedicines();
   console.log(res);
   return res;
 };
