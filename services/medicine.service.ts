@@ -44,10 +44,21 @@ export const medicineService = {
 
   getMedicines: async () => {
     try {
-      const res = await fetch(`${API_URL}/seller/medicines`);
+      const cookieStore = await cookies(); // ✅ await required in Next.js 16
+
+      const res = await fetch(`${API_URL}/seller/medicines`, {
+        method: "GET",
+        headers: {
+          Cookie: cookieStore.toString(), // ✅ works now
+        },
+        cache: "no-store",
+      });
+
       const data = await res.json();
+
       return { data, error: null };
     } catch (error) {
+      console.error("getMedicines error:", error);
       return { data: null, error: { message: "Something went wrong" } };
     }
   },

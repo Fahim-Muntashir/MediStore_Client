@@ -23,7 +23,7 @@ export const sellerRoutes: Route[] = [
       },
       {
         title: "My Medicines",
-        url: "/dashboard/medicines",
+        url: "/dashboard/my-medicines",
       },
       {
         title: "Out of Stock",

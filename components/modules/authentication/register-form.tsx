@@ -50,7 +50,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         console.log(value);
         const { data, error } = await authClient.signUp.email(value);
-        console.log(data);
+        console.log(data, "falalala");
         if (error) {
           toast.error(error.message, {
             id: toastId,
