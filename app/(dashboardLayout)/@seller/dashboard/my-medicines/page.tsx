@@ -1,28 +1,85 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { getMedicines } from "@/actions/medicine.actions";
-import { ProductCard } from "@/components/modules/medicine/medicine-card";
+import { MedicineRow } from "@/components/modules/medicine/medicine-row";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import { CardTitle } from "@/components/ui/card";
 
-export default async function Home() {
-  const res = await getMedicines();
+export default function MyMedicinesClient({
+  initialMedicines,
+}: {
+  initialMedicines?: any[];
+}) {
+  const [medicines, setMedicines] = useState(initialMedicines || []);
+  const [loading, setLoading] = useState(!initialMedicines);
+  const [error, setError] = useState<string | null>(null);
 
-  console.log("API RESPONSE:", res);
+  useEffect(() => {
+    if (!initialMedicines) {
+      setLoading(true);
+      getMedicines()
+        .then((res) => setMedicines(Array.isArray(res?.data) ? res.data : []))
+        .catch((err) => {
+          console.error(err);
+          setError("Failed to load medicines");
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [initialMedicines]);
 
-  const medicines = Array.isArray(res?.data)
-    ? res.data
-    : Array.isArray(res)
-      ? res
-      : [];
+  const handleEdit = (product: any) => console.log("Edit:", product);
+
+  const handleDelete = async (id: string) => {
+    const confirmed = confirm("Are you sure you want to delete this product?");
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch(`/api/v1/medicine/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      setMedicines((prev) => prev.filter((m) => m.id !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete");
+    }
+  };
+
+  if (loading) return <p>Loading medicines...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="mb-8 text-3xl font-bold">Products</h1>
+    <div>
+      <CardTitle className="pb-4 text-2xl">My Medicines</CardTitle>
+      <Table className="mx-10">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Image</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Stock</TableHead>
+            <TableHead>Last Updated</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {medicines.map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+        <TableBody>
+          {medicines.map((product) => (
+            <MedicineRow
+              key={product.id}
+              product={product}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))}
-        </div>
-      </div>
-    </main>
+        </TableBody>
+      </Table>
+    </div>
   );
 }
