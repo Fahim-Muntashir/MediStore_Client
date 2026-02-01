@@ -3,8 +3,9 @@
 import { Pill, ShoppingCart, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { fetchCartItems } from "@/actions/medicine.actions";
 
 const navLinks = [
   { name: "Home", href: "#" },
@@ -19,6 +20,26 @@ export function Header({ data }: any) {
   console.log(data);
   const userInfo = data?.user;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [cartData, setCartData] = useState<any>(null);
+  const [cartError, setCartError] = useState<string | null>(null);
+  const [loadingCart, setLoadingCart] = useState(true);
+
+  useEffect(() => {
+    const loadCart = async () => {
+      setLoadingCart(true);
+      const res = await fetchCartItems(); // async call
+      if (res.success) {
+        setCartData(res.data);
+      } else {
+        setCartError(res.error?.message || "Failed to fetch cart");
+      }
+      setLoadingCart(false);
+    };
+
+    loadCart();
+  }, []);
+
+  console.log(cartData[0].items.length, "hello cart Data");
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -100,15 +121,14 @@ export function Header({ data }: any) {
                     </div>
                   )}
                 </div>
-
                 {/* Cart Button */}
                 <Button variant="ghost" size="icon" className="relative">
                   <ShoppingCart className="h-5 w-5" />
                   <span className="sr-only">Cart</span>
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                    0
+                    {cartData[0].items.length}
                   </span>
-                </Button>
+                </Button>{" "}
               </>
             )}
             <Button

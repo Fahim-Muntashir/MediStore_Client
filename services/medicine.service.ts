@@ -41,7 +41,6 @@ export const medicineService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
-
   getSellerMedicines: async () => {
     try {
       const cookieStore = await cookies();
@@ -91,7 +90,6 @@ export const medicineService = {
       };
     }
   },
-
   getAllMedicines: async () => {
     try {
       const cookieStore = await cookies();
@@ -132,7 +130,6 @@ export const medicineService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
-
   updateMedicine: async (id: string, medicineData: MedicineData) => {
     try {
       const cookieStore = await cookies(); // server-side cookies
@@ -185,6 +182,35 @@ export const medicineService = {
     } catch (error) {
       console.error("deleteMedicine error:", error);
       return { error: { message: "Something went wrong" } };
+    }
+  },
+
+  getAllCartItems: async () => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/customer/cart`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to fetch cart items");
+      }
+
+      const data = await res.json();
+      return { data, error: null };
+    } catch (error: any) {
+      console.error("getAllCartItems error:", error);
+      return {
+        data: null,
+        error: { message: error.message || "Something went wrong" },
+      };
     }
   },
 };

@@ -11,28 +11,22 @@ export const getMedicines = async () => {
 // Create a new medicine
 export const createMedicine = async (data: MedicineData) => {
   const res = await medicineService.createMedicine(data);
-  updateTag("blogPosts"); // invalidate cache
-  console.log(res);
+  updateTag("blogPosts");
   return res;
 };
 
-// NEW: Update an existing medicine
 export const updateMedicine = async (id: string, data: MedicineData) => {
   const res = await medicineService.updateMedicine(id, data);
-  updateTag("blogPosts"); // invalidate cache
-  console.log(res);
+  updateTag("blogPosts");
   return res;
 };
-// NEW: Delete an existing medicine
 export const deleteMedicine = async (id: string) => {
   const res = await medicineService.deleteMedicine(id);
-  updateTag("blogPosts"); // invalidate cache
-  console.log(res);
+  updateTag("blogPosts");
   return res;
 };
 export const fetchAllMedicines = async () => {
   const res = await medicineService.getAllMedicines();
-  console.log(res);
   return res;
 };
 
@@ -44,4 +38,13 @@ export const fetchSingleMedicineDetails = async (id: string) => {
 export const addMedicineToCart = async (id: string, quantity: number = 1) => {
   const res = await medicineService.addToCartMedicine(id, quantity);
   return res;
+};
+
+export const fetchCartItems = async () => {
+  const res = await medicineService.getAllCartItems();
+  return {
+    success: !res.error,
+    data: res.data,
+    error: res.error,
+  };
 };
