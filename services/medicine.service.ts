@@ -62,6 +62,35 @@ export const medicineService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
+  addToCartMedicine: async (id: string, quantity: number = 1) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/customer/cart/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ productId: id, quantity }),
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to add to cart");
+      }
+
+      const data = await res.json();
+      return { data, error: null };
+    } catch (error: any) {
+      console.error("addToCartMedicine error:", error);
+      return {
+        data: null,
+        error: { message: error.message || "Something went wrong" },
+      };
+    }
+  },
 
   getAllMedicines: async () => {
     try {

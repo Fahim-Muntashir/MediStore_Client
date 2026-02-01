@@ -1,3 +1,5 @@
+"use client"; // needed for client-side actions
+
 import {
   Card,
   CardContent,
@@ -6,8 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
+import { addMedicineToCart } from "@/actions/medicine.actions";
 
 interface Product {
   id: string;
@@ -25,6 +30,23 @@ interface Product {
 
 export function ProductCard({ product }: { product: Product }) {
   const inStock = product.stock > 0;
+
+  const handleAddToCart = async () => {
+    if (!inStock) return;
+
+    try {
+      // Await the bridge function and pass product ID
+      const { data, error } = await addMedicineToCart(product.id, 1);
+
+      if (error) {
+        toast.error(error.message || "Something went wrong");
+        return;
+      }
+      toast.success(`${product.name} added to cart!`);
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong");
+    }
+  };
 
   return (
     <Card className="w-full max-w-sm overflow-hidden hover:shadow-lg transition-shadow">
@@ -73,15 +95,25 @@ export function ProductCard({ product }: { product: Product }) {
             </p>
           </div>
         </div>
+
         <div className="pt-2">
           <Link
             href={`/shop/${product.id}`}
-            className="border-b-4 border-green-400
-"
+            className="border-b-2 border-green-400"
           >
             View Details
           </Link>
         </div>
+
+        {/* Add to Cart Button */}
+        <Button
+          onClick={handleAddToCart}
+          disabled={!inStock}
+          className="w-full mt-2"
+        >
+          {inStock ? "Add to Cart" : "Out of Stock"}
+        </Button>
+
         <div className="pt-2">
           <p className="text-xs text-gray-400">
             Last updated: {new Date(product.updatedAt).toLocaleDateString()}

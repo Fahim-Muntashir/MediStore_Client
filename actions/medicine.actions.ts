@@ -40,3 +40,8 @@ export const fetchSingleMedicineDetails = async (id: string) => {
   const res = await medicineService.getSingleMedicineDetails(id);
   return res;
 };
+
+export const addMedicineToCart = async (id: string, quantity: number = 1) => {
+  const res = await medicineService.addToCartMedicine(id, quantity);
+  return res;
+};
