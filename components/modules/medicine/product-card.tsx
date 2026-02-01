@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -72,7 +73,15 @@ export function ProductCard({ product }: { product: Product }) {
             </p>
           </div>
         </div>
-
+        <div className="pt-2">
+          <Link
+            href={`/shop/${product.id}`}
+            className="border-b-4 border-green-400
+"
+          >
+            View Details
+          </Link>
+        </div>
         <div className="pt-2">
           <p className="text-xs text-gray-400">
             Last updated: {new Date(product.updatedAt).toLocaleDateString()}

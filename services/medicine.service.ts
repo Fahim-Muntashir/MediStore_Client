@@ -83,6 +83,26 @@ export const medicineService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
+  getSingleMedicineDetails: async (id: string) => {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/medicine/${id}`, {
+        method: "GET",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      const data = await res.json();
+
+      return { data, error: null };
+    } catch (error) {
+      console.error("getSingleMedicineDetails error:", error);
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
 
   updateMedicine: async (id: string, medicineData: MedicineData) => {
     try {

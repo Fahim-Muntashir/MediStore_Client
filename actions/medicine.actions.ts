@@ -35,3 +35,8 @@ export const fetchAllMedicines = async () => {
   console.log(res);
   return res;
 };
+
+export const fetchSingleMedicineDetails = async (id: string) => {
+  const res = await medicineService.getSingleMedicineDetails(id);
+  return res;
+};
