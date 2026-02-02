@@ -9,8 +9,8 @@ export const customerRoutes: Route[] = [
         url: "/dashboard",
       },
       {
-        title: "Analytics",
-        url: "/dashboard/analytics",
+        title: "Home",
+        url: "/",
       },
     ],
   },
@@ -21,14 +21,6 @@ export const customerRoutes: Route[] = [
         title: "Profile",
         url: "/dashboard/profile",
       },
-      {
-        title: "Settings",
-        url: "/dashboard/settings",
-      },
-      {
-        title: "Security",
-        url: "/dashboard/security",
-      },
     ],
   },
   {
@@ -36,7 +28,7 @@ export const customerRoutes: Route[] = [
     items: [
       {
         title: "My Orders",
-        url: "/dashboard/orders",
+        url: "/dashboard/my-orders",
       },
       {
         title: "Order History",

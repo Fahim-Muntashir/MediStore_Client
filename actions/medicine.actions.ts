@@ -1,6 +1,7 @@
 "use server";
 
 import { MedicineData, medicineService } from "@/services/medicine.service";
+import { orderService } from "@/services/order.service";
 import { updateTag } from "next/cache";
 
 // Fetch all medicines
@@ -42,6 +43,26 @@ export const addMedicineToCart = async (id: string, quantity: number = 1) => {
 
 export const fetchCartItems = async () => {
   const res = await medicineService.getAllCartItems();
+  return {
+    success: !res.error,
+    data: res.data,
+    error: res.error,
+  };
+};
+
+export const placeOrder = async (orderData: {
+  items: any[];
+  address: {
+    name: string;
+    phone: string;
+    street: string;
+    city: string;
+    postalCode: string;
+  };
+  paymentMethod: "cod" | "online";
+}) => {
+  const res = await orderService.createOrder(orderData);
+
   return {
     success: !res.error,
     data: res.data,

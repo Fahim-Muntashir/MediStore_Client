@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { addMedicineToCart } from "@/actions/medicine.actions";
+import { useRouter } from "next/navigation";
 
 interface Product {
   id: string;
@@ -30,7 +31,7 @@ interface Product {
 
 export function ProductCard({ product }: { product: Product }) {
   const inStock = product.stock > 0;
-
+  const router = useRouter();
   const handleAddToCart = async () => {
     if (!inStock) return;
 
@@ -43,6 +44,7 @@ export function ProductCard({ product }: { product: Product }) {
         return;
       }
       toast.success(`${product.name} added to cart!`);
+      router.refresh();
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     }

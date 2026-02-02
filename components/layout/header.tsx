@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { fetchCartItems } from "@/actions/medicine.actions";
+import CartModal from "../modules/cart/CartModal";
 
 const navLinks = [
   { name: "Home", href: "#" },
@@ -39,7 +40,7 @@ export function Header({ data }: any) {
     loadCart();
   }, []);
 
-  console.log(cartData[0].items.length, "hello cart Data");
+  console.log(cartData, "hello cart Data");
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -99,6 +100,12 @@ export function Header({ data }: any) {
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Dashboard
+                        </a>{" "}
+                        <a
+                          href="/dashboard/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Profile
                         </a>
                       </div>
                       {/* Logout Button */}
@@ -122,13 +129,7 @@ export function Header({ data }: any) {
                   )}
                 </div>
                 {/* Cart Button */}
-                <Button variant="ghost" size="icon" className="relative">
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="sr-only">Cart</span>
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-                    {cartData[0].items.length}
-                  </span>
-                </Button>{" "}
+                <CartModal cartData={cartData} />
               </>
             )}
             <Button

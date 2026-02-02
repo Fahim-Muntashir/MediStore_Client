@@ -19,11 +19,11 @@ export const adminRoutes: Route[] = [
     items: [
       {
         title: "All Users",
-        url: "/admin/users",
+        url: "/dashboard/all-users",
       },
       {
-        title: "Customers",
-        url: "/admin/users/customers",
+        title: "All Orders",
+        url: "/dashboard/all-orders",
       },
       {
         title: "Sellers",
