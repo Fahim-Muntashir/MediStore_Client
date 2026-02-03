@@ -1,7 +1,7 @@
 export default function CustomerDashboard() {
   return (
     <div>
-      <h1> Admin </h1>
+      <h1> Seller Dashboard </h1>
     </div>
   );
 }

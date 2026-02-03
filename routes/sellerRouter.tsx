@@ -6,11 +6,15 @@ export const sellerRoutes: Route[] = [
     items: [
       {
         title: "Overview",
-        url: "/dashboard/dashboard",
+        url: "/dashboard/",
       },
       {
         title: "Home",
         url: "/",
+      },
+      {
+        title: "Profile",
+        url: "/dashboard/profile",
       },
     ],
   },
@@ -40,7 +44,7 @@ export const sellerRoutes: Route[] = [
     items: [
       {
         title: "All Orders",
-        url: "/dashboard/orders",
+        url: "/dashboard/all-orders",
       },
       {
         title: "Pending Orders",

@@ -7,7 +7,7 @@ export const getProfileServe = async () => {
   try {
     const cookieStore = await cookies();
 
-    const res = await fetch(`${API_URL}/customer/profile`, {
+    const res = await fetch(`${API_URL}/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const updateProfileServe = async (
   try {
     const cookieStore = await cookies();
 
-    const res = await fetch(`${API_URL}/customer/profile`, {
+    const res = await fetch(`${API_URL}/profile`, {
       method: "PUT", // or PUT depending on your API
       headers: {
         "Content-Type": "application/json",
