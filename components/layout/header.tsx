@@ -1,6 +1,6 @@
 "use client";
 
-import { Pill, ShoppingCart, Menu, X, User } from "lucide-react";
+import { Pill, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -18,7 +18,6 @@ const navLinks = [
 
 export function Header({ data }: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  console.log(data);
   const userInfo = data?.user;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [cartData, setCartData] = useState<any>(null);
@@ -39,8 +38,6 @@ export function Header({ data }: any) {
 
     loadCart();
   }, []);
-
-  console.log(cartData, "hello cart Data");
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">

@@ -1,6 +1,8 @@
 import { createAuthClient } from "better-auth/react";
 export const authClient = createAuthClient({
   /** The base URL of the server (optional if you're using the same domain) */
-  // baseURL: "https://medistore-eight.vercel.app",
-  baseURL: "http://localhost:5000/",
+  baseURL: process.env.NEXT_PUBLIC_API_AUTH_URL,
+  fetchOptions: {
+    credentials: "include", // ✅ REQUIRED
+  },
 });
