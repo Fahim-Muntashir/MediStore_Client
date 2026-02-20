@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -70,7 +71,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+        <CardTitle>Login</CardTitle>
         <CardDescription>
           Enter your information below to create your account
         </CardDescription>
@@ -135,6 +136,12 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           </FieldGroup>
         </form>
 
+        <p className="my-5 mx-1">
+          Don't Have any account !{" "}
+          <Link className="text-green-700 font-bold" href={"/register"}>
+            Register
+          </Link>
+        </p>
         <CardFooter className="flex flex-col gap-5 justify-end mt-5">
           {" "}
           <Button type="submit" form="login-form" className="w-full">

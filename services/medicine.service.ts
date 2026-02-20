@@ -89,23 +89,37 @@ export const medicineService = {
       };
     }
   },
-  getAllMedicines: async () => {
+  getAllMedicines: async (params?: {
+    search?: string;
+    category?: string;
+    manufacturer?: string;
+    minPrice?: number;
+    maxPrice?: number;
+  }) => {
     try {
-      const cookieStore = await cookies();
+      const query = new URLSearchParams();
 
-      const res = await fetch(`${API_URL}/medicine`, {
-        method: "GET",
-        headers: {
-          Cookie: cookieStore.toString(),
+      if (params?.search) query.append("search", params.search);
+      if (params?.category) query.append("category", params.category);
+      if (params?.manufacturer)
+        query.append("manufacturer", params.manufacturer);
+      if (params?.minPrice !== undefined)
+        query.append("minPrice", String(params.minPrice));
+      if (params?.maxPrice !== undefined)
+        query.append("maxPrice", String(params.maxPrice));
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/medicine?${query.toString()}`,
+        {
+          method: "GET",
+          cache: "no-store",
         },
-        cache: "no-store",
-      });
+      );
 
       const data = await res.json();
 
       return { data, error: null };
     } catch (error) {
-      console.error("getMedicines error:", error);
       return { data: null, error: { message: "Something went wrong" } };
     }
   },

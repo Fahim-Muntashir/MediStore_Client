@@ -1,4 +1,11 @@
 "use server";
+type MedicineQueryParams = {
+  search?: string;
+  category?: string;
+  manufacturer?: string;
+  minPrice?: number;
+  maxPrice?: number;
+};
 
 import { MedicineData, medicineService } from "@/services/medicine.service";
 import { orderService } from "@/services/order.service";
@@ -26,9 +33,14 @@ export const deleteMedicine = async (id: string) => {
   updateTag("blogPosts");
   return res;
 };
-export const fetchAllMedicines = async () => {
-  const res = await medicineService.getAllMedicines();
-  return res;
+export const fetchAllMedicines = async (params?: {
+  search?: string;
+  category?: string;
+  manufacturer?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}) => {
+  return await medicineService.getAllMedicines(params);
 };
 
 export const fetchSingleMedicineDetails = async (id: string) => {

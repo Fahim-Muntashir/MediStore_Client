@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import * as z from "zod";
 import { toast } from "sonner";
@@ -21,9 +22,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { createMedicine } from "@/actions/medicine.actions";
-import { useRouter } from "next/navigation";
+import { getAllCategories } from "@/actions/admin.action";
 
-// Zod schema
 const medicineSchema = z.object({
   name: z.string().min(2),
   description: z.string().min(10),
@@ -37,29 +37,36 @@ const medicineSchema = z.object({
     .transform((val) => Number(val))
     .refine((val) => val >= 0, "Stock cannot be negative"),
   image: z.string().url(),
-  categories: z
-    .string()
-    .optional()
-    .transform((val) =>
-      val
-        ? val
-            .split(",")
-            .map((c) => c.trim())
-            .filter(Boolean)
-        : [],
-    ),
+  categories: z.array(z.string()).optional().default([]),
 });
 
 export default function AddMedicineForm() {
+  const [categoriesOptions, setCategoriesOptions] = useState<
+    { id: string; name: string }[]
+  >([]);
+  const [selectedCategories, setSelectedCategories] = useState<
+    { id: string; name: string }[]
+  >([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const res = await getAllCategories();
+      if (!res.error && res.data) {
+        setCategoriesOptions(res.data);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const form = useForm({
     defaultValues: {
       name: "",
       description: "",
       manufacturer: "",
-      price: "", // string input for numeric
-      stock: "", // string input for numeric
+      price: "",
+      stock: "",
       image: "",
-      categories: "",
+      categories: [] as string[],
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Creating....");
@@ -71,28 +78,37 @@ export default function AddMedicineForm() {
         price: Number(value.price),
         stock: Number(value.stock),
         image: value.image,
-        categories: value.categories
-          ? value.categories
-              .split(",")
-              .map((c) => c.trim())
-              .filter(Boolean)
-          : [],
+        categories: selectedCategories.map((c) => c.id),
       };
 
       try {
         const res = await createMedicine(medicineData);
+
+        console.log(res, "Darta createtion eror");
         if (res.error) {
           toast.error(res.error.message, { id: toastId });
           return;
         }
 
         form.reset();
-        toast.success("Medcine Created", { id: toastId });
+        setSelectedCategories([]);
+        toast.success("Medicine Created", { id: toastId });
       } catch (err) {
         toast.error("Something Went Wrong", { id: toastId });
       }
     },
-  }); // <- this closes useForm
+  });
+
+  const addCategory = (id: string) => {
+    const category = categoriesOptions.find((c) => c.id === id);
+    if (category && !selectedCategories.find((c) => c.id === id)) {
+      setSelectedCategories((prev) => [...prev, category]);
+    }
+  };
+
+  const removeCategory = (id: string) => {
+    setSelectedCategories((prev) => prev.filter((c) => c.id !== id));
+  };
 
   return (
     <Card className="lg:mx-80">
@@ -102,6 +118,7 @@ export default function AddMedicineForm() {
           Fill in the details to add a new medicine to your store
         </CardDescription>
       </CardHeader>
+
       <CardContent>
         <form
           id="add-medicine-form"
@@ -114,162 +131,160 @@ export default function AddMedicineForm() {
             {/* Name */}
             <form.Field
               name="name"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field>
-                    <FieldLabel>Medicine Name</FieldLabel>
-                    <Input
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Medicine Name</FieldLabel>
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && !field.state.meta.isValid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
 
             {/* Description */}
             <form.Field
               name="description"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field>
-                    <FieldLabel>Description</FieldLabel>
-                    <Textarea
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Description</FieldLabel>
+                  <Textarea
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && !field.state.meta.isValid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
 
             {/* Manufacturer */}
             <form.Field
               name="manufacturer"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field>
-                    <FieldLabel>Manufacturer</FieldLabel>
-                    <Input
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Manufacturer</FieldLabel>
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && !field.state.meta.isValid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
 
             {/* Price */}
             <form.Field
               name="price"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field>
-                    <FieldLabel>Price</FieldLabel>
-                    <Input
-                      type="text"
-                      inputMode="decimal"
-                      pattern="[0-9]*"
-                      value={field.state.value}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (/^\d*\.?\d*$/.test(val)) {
-                          field.handleChange(val);
-                        }
-                      }}
-                      className="!appearance-none"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Price</FieldLabel>
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    pattern="[0-9]*"
+                    value={field.state.value}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (/^\d*\.?\d*$/.test(val)) {
+                        field.handleChange(val);
+                      }
+                    }}
+                    className="!appearance-none"
+                  />
+                  {field.state.meta.isTouched && !field.state.meta.isValid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
 
             {/* Stock */}
             <form.Field
               name="stock"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field>
-                    <FieldLabel>Stock</FieldLabel>
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      value={field.state.value}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        if (/^\d*$/.test(val)) {
-                          field.handleChange(val);
-                        }
-                      }}
-                      className="!appearance-none"
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Stock</FieldLabel>
+                  <Input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={field.state.value}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (/^\d*$/.test(val)) {
+                        field.handleChange(val);
+                      }
+                    }}
+                    className="!appearance-none"
+                  />
+                  {field.state.meta.isTouched && !field.state.meta.isValid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
 
-            {/* Image URL */}
+            {/* Image */}
             <form.Field
               name="image"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field>
-                    <FieldLabel>Image URL</FieldLabel>
-                    <Input
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
+              children={(field) => (
+                <Field>
+                  <FieldLabel>Image URL</FieldLabel>
+                  <Input
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.state.meta.isTouched && !field.state.meta.isValid && (
+                    <FieldError errors={field.state.meta.errors} />
+                  )}
+                </Field>
+              )}
             />
 
-            {/* Categories */}
-            <form.Field
-              name="categories"
-              children={(field) => {
-                return (
-                  <Field>
-                    <FieldLabel>Categories (comma-separated)</FieldLabel>
-                    <Input
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                  </Field>
-                );
-              }}
-            />
+            {/* Category Select */}
+            <Field>
+              <FieldLabel>Categories</FieldLabel>
+              <select
+                onChange={(e) => addCategory(e.target.value)}
+                className="border rounded p-2 w-full"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select category
+                </option>
+                {categoriesOptions.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+
+              {/* Display selected categories as tags */}
+              <div className="flex flex-wrap mt-2 gap-2">
+                {selectedCategories.map((c) => (
+                  <div
+                    key={c.id}
+                    className="bg-blue-200 px-2 py-1 rounded flex items-center gap-1"
+                  >
+                    <span>{c.name}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeCategory(c.id)}
+                      className="text-red-600 font-bold"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Field>
           </FieldGroup>
         </form>
       </CardContent>

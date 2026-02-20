@@ -13,3 +13,7 @@ export const updateUserStatus = async (userId: string, status: string) => {
 export const getAllOrders = async () => {
   return await adminService.getAllOrders();
 };
+
+export const getAllCategories = async () => {
+  return await adminService.getCategories();
+};

@@ -24,6 +24,8 @@ export function Header({ data }: any) {
   const [cartError, setCartError] = useState<string | null>(null);
   const [loadingCart, setLoadingCart] = useState(true);
 
+  console.log(data, "data from header");
+
   useEffect(() => {
     const loadCart = async () => {
       setLoadingCart(true);

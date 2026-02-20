@@ -12,10 +12,6 @@ export const sellerRoutes: Route[] = [
         title: "Home",
         url: "/",
       },
-      {
-        title: "Profile",
-        url: "/dashboard/profile",
-      },
     ],
   },
   {
@@ -29,14 +25,6 @@ export const sellerRoutes: Route[] = [
         title: "My Medicines",
         url: "/dashboard/my-medicines",
       },
-      {
-        title: "Out of Stock",
-        url: "/dashboard/medicines/out-of-stock",
-      },
-      {
-        title: "Medicine History",
-        url: "/dashboard/medicines/history",
-      },
     ],
   },
   {
@@ -46,43 +34,15 @@ export const sellerRoutes: Route[] = [
         title: "All Orders",
         url: "/dashboard/all-orders",
       },
-      {
-        title: "Pending Orders",
-        url: "/dashboard/orders/pending",
-      },
-      {
-        title: "Completed Orders",
-        url: "/dashboard/orders/completed",
-      },
-      {
-        title: "Cancelled Orders",
-        url: "/dashboard/orders/cancelled",
-      },
     ],
   },
-  {
-    title: "Inventory",
-    items: [
-      {
-        title: "Stock Management",
-        url: "/dashboard/inventory",
-      },
-      {
-        title: "Categories",
-        url: "/dashboard/categories",
-      },
-    ],
-  },
+
   {
     title: "Account",
     items: [
       {
         title: "Profile",
         url: "/dashboard/profile",
-      },
-      {
-        title: "Settings",
-        url: "/dashboard/settings",
       },
     ],
   },

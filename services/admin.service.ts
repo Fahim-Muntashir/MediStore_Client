@@ -60,6 +60,7 @@ export const adminService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
+
   getAllOrders: async () => {
     try {
       const cookieStore = await cookies();
@@ -79,6 +80,34 @@ export const adminService = {
         return {
           data: null,
           error: { message: data.error || "Failed to fetch orders" },
+        };
+      }
+
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+
+  getCategories: async () => {
+    try {
+      const cookieStore = await cookies(); // Next.js cookies
+
+      const res = await fetch(`${API_URL}/admin/categories`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        return {
+          data: null,
+          error: { message: data.error || "Failed to fetch categories" },
         };
       }
 

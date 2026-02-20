@@ -30,23 +30,10 @@ export const customerRoutes: Route[] = [
         title: "My Orders",
         url: "/dashboard/my-orders",
       },
-      {
-        title: "Order History",
-        url: "/dashboard/orders/history",
-      },
-    ],
-  },
-  {
-    title: "Support",
-    items: [
-      {
-        title: "Help Center",
-        url: "/dashboard/help",
-      },
-      {
-        title: "Contact Support",
-        url: "/dashboard/support",
-      },
+      // {
+      //   title: "Order History",
+      //   url: "/dashboard/orders/history",
+      // },
     ],
   },
 ];

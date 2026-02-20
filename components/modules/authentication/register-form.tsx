@@ -17,6 +17,7 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "../../ui/field";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
+import Link from "next/link";
 
 const formSchema = z.object({
   name: z.string().min(1, "This field is required"),
@@ -183,7 +184,12 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
             />
           </FieldGroup>
         </form>
-
+        <p className="my-5 mx-1">
+          Already Have an Account!
+          <Link className="text-green-700 font-bold" href={"/login"}>
+            Login
+          </Link>
+        </p>
         <CardFooter className="flex flex-col gap-5 justify-end mt-5">
           {" "}
           <Button type="submit" form="login-form" className="w-full">
