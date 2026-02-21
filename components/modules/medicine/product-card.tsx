@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { addMedicineToCart } from "@/actions/medicine.actions";
-import { useRouter } from "next/navigation";
+import { useCart } from "@/app/provider/cartProvider";
 
 interface Product {
   id: string;
@@ -31,20 +31,21 @@ interface Product {
 
 export function ProductCard({ product }: { product: Product }) {
   const inStock = product.stock > 0;
-  const router = useRouter();
+  const { refreshCart } = useCart(); // ✅ get refreshCart from context
+
   const handleAddToCart = async () => {
     if (!inStock) return;
 
     try {
-      // Await the bridge function and pass product ID
       const { data, error } = await addMedicineToCart(product.id, 1);
 
       if (error) {
         toast.error(error.message || "Something went wrong");
         return;
       }
+
       toast.success(`${product.name} added to cart!`);
-      router.refresh();
+      refreshCart(); // ✅ update cart in header
     } catch (err: any) {
       toast.error(err.message || "Something went wrong");
     }

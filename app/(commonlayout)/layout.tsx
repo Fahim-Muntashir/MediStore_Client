@@ -1,5 +1,7 @@
+// app/(commonlayout)/layout.tsx
 import { Footer2 } from "@/components/layout/footer2";
 import { Header } from "@/components/layout/header";
+import { CartProvider } from "@/app/provider/cartProvider";
 import { userService } from "@/services/user.service";
 
 export default async function CommonLayout({
@@ -10,10 +12,10 @@ export default async function CommonLayout({
   const { data } = await userService.getSession();
 
   return (
-    <div>
-      <Header data={data?.user}></Header>
+    <CartProvider>
+      <Header data={data?.user} />
       {children}
-      <Footer2></Footer2>
-    </div>
+      <Footer2 />
+    </CartProvider>
   );
 }

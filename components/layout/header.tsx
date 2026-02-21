@@ -3,13 +3,13 @@
 import { Pill, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { fetchCartItems } from "@/actions/medicine.actions";
 import CartModal from "../modules/cart/CartModal";
+import { useCart } from "@/app/provider/cartProvider";
 
 const navLinks = [
-  { name: "Home", href: "#" },
+  { name: "Home", href: "/" },
   { name: "Shop", href: "/shop" },
   { name: "Categories", href: "#" },
   { name: "Offers", href: "#" },
@@ -18,28 +18,8 @@ const navLinks = [
 
 export function Header({ data }: any) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const userInfo = data?.user;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [cartData, setCartData] = useState<any>(null);
-  const [cartError, setCartError] = useState<string | null>(null);
-  const [loadingCart, setLoadingCart] = useState(true);
-
-  console.log(data, "data from header");
-
-  useEffect(() => {
-    const loadCart = async () => {
-      setLoadingCart(true);
-      const res = await fetchCartItems(); // async call
-      if (res.success) {
-        setCartData(res.data);
-      } else {
-        setCartError(res.error?.message || "Failed to fetch cart");
-      }
-      setLoadingCart(false);
-    };
-
-    loadCart();
-  }, []);
+  const { cartData } = useCart(); // ✅ use cart context
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -76,9 +56,9 @@ export function Header({ data }: any) {
               </>
             ) : (
               <>
-                {/* Account Button with Hover Dropdown */}
+                {/* Account Button */}
                 <div
-                  className="relative  sm:flex"
+                  className="relative sm:flex"
                   onMouseEnter={() => setDropdownOpen(true)}
                   onMouseLeave={() => setDropdownOpen(false)}
                 >
@@ -87,34 +67,29 @@ export function Header({ data }: any) {
                     <span className="sr-only">Account</span>
                   </Button>
 
-                  {/* Dropdown */}
                   {isDropdownOpen && (
-                    <div className="absolute right-[-10] mt-6 w-48 rounded-md bg-white shadow-lg z-10">
+                    <div className="absolute right-0 mt-6 w-48 rounded-md bg-white shadow-lg z-10">
                       <div className="py-2">
                         <span className="block px-4 py-2 text-sm text-gray-700">
-                          Hi, Fahim
+                          Hi, {data.user.name || "User"}
                         </span>
-                        <a
+                        <Link
                           href="/dashboard"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Dashboard
-                        </a>{" "}
-                        <a
+                        </Link>
+                        <Link
                           href="/dashboard/profile"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Profile
-                        </a>
+                        </Link>
                       </div>
-                      {/* Logout Button */}
                       <button
                         onClick={async () => {
                           try {
-                            // Sign the user out
                             await authClient.signOut();
-
-                            // Redirect to home page after logout
                             window.location.href = "/";
                           } catch (err) {
                             console.error("Logout failed:", err);
@@ -127,10 +102,12 @@ export function Header({ data }: any) {
                     </div>
                   )}
                 </div>
+
                 {/* Cart Button */}
                 <CartModal cartData={cartData} />
               </>
             )}
+
             <Button
               variant="ghost"
               size="icon"

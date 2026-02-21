@@ -15,13 +15,18 @@ export const orderService = {
     paymentMethod: "cod" | "online";
   }) => {
     try {
-      const cookieStore = cookies(); // no need await
+      const cookieStore = await cookies(); // ✅ await
+
+      const cookieHeader = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join("; ");
 
       const res = await fetch(`${API_URL}/customer/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
+          Cookie: cookieHeader,
         },
         body: JSON.stringify(orderData),
       });
@@ -36,20 +41,28 @@ export const orderService = {
       }
 
       return { data, error: null };
-    } catch (error) {
-      return { data: null, error: { message: "Something went wrong" } };
+    } catch (error: any) {
+      return {
+        data: null,
+        error: { message: error.message || "Something went wrong" },
+      };
     }
   },
 
   getOrderByUser: async () => {
     try {
-      const cookieStore = cookies();
+      const cookieStore = await cookies(); // ✅ must await
+
+      const cookieHeader = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join("; ");
 
       const res = await fetch(`${API_URL}/customer/orders`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
+          Cookie: cookieHeader,
         },
         cache: "no-store",
       });
@@ -64,8 +77,11 @@ export const orderService = {
       }
 
       return { data, error: null };
-    } catch (error) {
-      return { data: null, error: { message: "Something went wrong" } };
+    } catch (error: any) {
+      return {
+        data: null,
+        error: { message: error.message || "Something went wrong" },
+      };
     }
   },
 
@@ -82,12 +98,12 @@ export const orderService = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieHeader, // ✅ correct way
+          Cookie: cookieHeader,
         },
         cache: "no-store",
       });
 
-      const text = await res.text(); // ✅ prevent JSON parse error
+      const text = await res.text();
       let data: any;
       try {
         data = JSON.parse(text);
@@ -98,6 +114,7 @@ export const orderService = {
           error: { message: "Backend returned invalid response (not JSON)" },
         };
       }
+
       if (!res.ok || data.error) {
         return {
           data: null,
@@ -106,21 +123,28 @@ export const orderService = {
       }
 
       return { data, error: null };
-    } catch (error) {
-      return { data: null, error: { message: "Something went wrong" } };
+    } catch (error: any) {
+      return {
+        data: null,
+        error: { message: error.message || "Something went wrong" },
+      };
     }
   },
 
   updateOrderStatus: async (orderId: string, status: string) => {
     try {
-      // Await the cookies() call
-      const cookieStore = await cookies();
+      const cookieStore = await cookies(); // ✅ await
+
+      const cookieHeader = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join("; ");
 
       const res = await fetch(`${API_URL}/seller/orders/${orderId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(), // now safe
+          Cookie: cookieHeader,
         },
         body: JSON.stringify({ status }),
         cache: "no-store",
@@ -136,8 +160,11 @@ export const orderService = {
       }
 
       return { data, error: null };
-    } catch (error) {
-      return { data: null, error: { message: "Something went wrong" } };
+    } catch (error: any) {
+      return {
+        data: null,
+        error: { message: error.message || "Something went wrong" },
+      };
     }
   },
 };

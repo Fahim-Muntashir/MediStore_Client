@@ -60,29 +60,34 @@ export const medicineService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
+
   addToCartMedicine: async (id: string, quantity: number = 1) => {
     try {
-      const cookieStore = await cookies();
+      const cookieStore = await cookies(); // ✅ MUST await
+
+      const cookieHeader = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join("; ");
 
       const res = await fetch(`${API_URL}/customer/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Cookie: cookieStore.toString(),
+          Cookie: cookieHeader, // manually forward cookie
         },
         body: JSON.stringify({ productId: id, quantity }),
         cache: "no-store",
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to add to cart");
+        throw new Error(data.message || "Failed to add to cart");
       }
 
-      const data = await res.json();
       return { data, error: null };
     } catch (error: any) {
-      console.error("addToCartMedicine error:", error);
       return {
         data: null,
         error: { message: error.message || "Something went wrong" },
