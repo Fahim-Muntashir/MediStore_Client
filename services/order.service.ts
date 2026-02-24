@@ -167,4 +167,46 @@ export const orderService = {
       };
     }
   },
+  leaveReview: async (
+    orderId: string,
+    reviewData: {
+      medicineId: string;
+      rating: number;
+      comment?: string;
+    },
+  ) => {
+    try {
+      const cookieStore = await cookies();
+
+      const cookieHeader = cookieStore
+        .getAll()
+        .map((c) => `${c.name}=${c.value}`)
+        .join("; ");
+
+      const res = await fetch(`${API_URL}/customer/orders/${orderId}/review`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader,
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        return {
+          data: null,
+          error: { message: data.error || "Failed to submit review" },
+        };
+      }
+
+      return { data, error: null };
+    } catch (err: any) {
+      return {
+        data: null,
+        error: { message: err.message || "Something went wrong" },
+      };
+    }
+  },
 };

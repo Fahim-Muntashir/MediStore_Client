@@ -3,6 +3,7 @@ import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, MapPin, Phone, CreditCard, Truck } from "lucide-react";
+import { LeaveReview } from "./LeaveReview";
 
 // Define types
 type Address = {
@@ -14,7 +15,8 @@ type Address = {
 };
 
 type Item = {
-  id: string;
+  id: string; // order item id
+  medicineId: string; // ✅ add this
   name: string;
   price: number;
   quantity: number;
@@ -116,6 +118,10 @@ const Page = async () => {
                             <p className="font-medium text-foreground">
                               ${(item.price * item.quantity).toFixed(2)}
                             </p>
+                            <LeaveReview
+                              orderId={order.id}
+                              medicineId={item.medicineId}
+                            />
                           </div>
                         ))}
                       </div>

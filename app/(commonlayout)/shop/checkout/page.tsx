@@ -6,8 +6,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/app/provider/cartProvider";
 
 const Page = () => {
+  const { clearCart } = useCart();
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const router = useRouter();
@@ -33,7 +35,6 @@ const Page = () => {
 
     const formData = new FormData(e.currentTarget);
 
-    // Build the address object
     const address = {
       name: formData.get("name") as string,
       phone: formData.get("phone") as string,
@@ -42,28 +43,22 @@ const Page = () => {
       postalCode: formData.get("postalCode") as string,
     };
 
-    // Get payment method
     const paymentMethod = formData.get("paymentMethod") as "cod" | "online";
 
-    // Construct the final order object
     const orderData = {
-      items: cartItems, // cartItems from state
+      items: cartItems,
       address,
       paymentMethod,
-      totalPrice, // optional, can include
+      totalPrice,
     };
-
-    console.log("Order Data:", orderData);
 
     try {
       const res = await placeOrder(orderData);
-      console.log(res);
+
       if (res.success) {
-        router.refresh();
-        router.push("/");
+        clearCart(); // ✅ instantly empty UI cart
+        router.push("/"); // redirect
       }
-      console.log("Order Response:", res);
-      // Show success message or redirect
     } catch (err) {
       console.error("Place order failed:", err);
     }

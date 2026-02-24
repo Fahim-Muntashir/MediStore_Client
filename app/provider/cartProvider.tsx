@@ -1,40 +1,41 @@
-// app/provider/cartProvider.tsx
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
 import { fetchCartItems } from "@/actions/medicine.actions";
+import { createContext, useContext, useEffect, useState } from "react";
 
-interface CartContextType {
-  cartData: any;
-  refreshCart: () => Promise<void>;
-}
+const CartContext = createContext<any>(null);
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [cart, setCart] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cartData, setCartData] = useState<any>(null);
-
-  const refreshCart = async () => {
-    const res = await fetchCartItems();
-    if (res.success) {
-      setCartData(res.data);
-    } else {
-      setCartData(null);
-    }
+  const fetchCart = async () => {
+    setLoading(true);
+    const { data } = await fetchCartItems();
+    setCart(data);
+    setLoading(false);
   };
 
+  const clearCart = () => {
+    setCart(null);
+  };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
   return (
-    <CartContext.Provider value={{ cartData, refreshCart }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        loading,
+        refreshCart: fetchCart,
+        clearCart, // ✅ expose this
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
-};
+}
 
-// Custom hook to consume the cart context
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
-  return context;
-};
+export const useCart = () => useContext(CartContext);

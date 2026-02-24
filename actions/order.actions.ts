@@ -12,6 +12,19 @@ export const getOrdersBySeller = async () => {
 };
 
 export const updateOrderStatus = async (orderId: string, status: string) => {
-  console.log(orderId, status);
   return await orderService.updateOrderStatus(orderId, status);
+};
+
+// ----------------- Review Bridge -----------------
+export const leaveReview = async (
+  orderId: string,
+  reviewData: {
+    medicineId: string;
+    rating: number;
+    comment?: string;
+  },
+) => {
+  const res = await orderService.leaveReview(orderId, reviewData);
+  console.log(res);
+  return res;
 };
