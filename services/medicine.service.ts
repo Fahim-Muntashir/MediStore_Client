@@ -231,4 +231,55 @@ export const medicineService = {
       };
     }
   },
+
+  getFeaturedMedicines: async () => {
+    try {
+      const res = await fetch(`${API_URL}/medicine/featured`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      const data = await res.json();
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+  getPopularMedicines: async () => {
+    try {
+      const res = await fetch(`${API_URL}/medicine/popular`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      const data = await res.json();
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+  toggleMedicineFeatured: async (id: string, isFeatured: boolean) => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/medicine/${id}/featured`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ isFeatured }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: data.error || "Failed to update featured status" },
+        };
+      }
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
 };

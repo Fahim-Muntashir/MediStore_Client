@@ -15,6 +15,20 @@ export const updateOrderStatus = async (orderId: string, status: string) => {
   return await orderService.updateOrderStatus(orderId, status);
 };
 
+export const placeOrder = async (orderData: {
+  address: {
+    name: string;
+    phone: string;
+    street: string;
+    city: string;
+    postalCode: string;
+  };
+  paymentMethod: "cod" | "online";
+}) => {
+  // Pass an empty items array if needed by service, but service should probably get it from cart on backend
+  return await orderService.createOrder({ ...orderData, items: [] });
+};
+
 // ----------------- Review Bridge -----------------
 export const leaveReview = async (
   orderId: string,

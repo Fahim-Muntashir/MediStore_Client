@@ -9,7 +9,7 @@ type MedicineQueryParams = {
 
 import { MedicineData, medicineService } from "@/services/medicine.service";
 import { orderService } from "@/services/order.service";
-import { updateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 // Fetch all medicines
 export const getMedicines = async () => {
@@ -19,18 +19,18 @@ export const getMedicines = async () => {
 // Create a new medicine
 export const createMedicine = async (data: MedicineData) => {
   const res = await medicineService.createMedicine(data);
-  updateTag("blogPosts");
+  revalidatePath("/");
   return res;
 };
 
 export const updateMedicine = async (id: string, data: MedicineData) => {
   const res = await medicineService.updateMedicine(id, data);
-  updateTag("blogPosts");
+  revalidatePath("/");
   return res;
 };
 export const deleteMedicine = async (id: string) => {
   const res = await medicineService.deleteMedicine(id);
-  updateTag("blogPosts");
+  revalidatePath("/");
   return res;
 };
 export const fetchAllMedicines = async (params?: {
@@ -80,4 +80,17 @@ export const placeOrder = async (orderData: {
     data: res.data,
     error: res.error,
   };
+};
+export const fetchFeaturedMedicines = async () => {
+  return await medicineService.getFeaturedMedicines();
+};
+
+export const fetchPopularMedicines = async () => {
+  return await medicineService.getPopularMedicines();
+};
+
+export const toggleMedicineFeatured = async (id: string, isFeatured: boolean) => {
+  const res = await medicineService.toggleMedicineFeatured(id, isFeatured);
+  revalidatePath("/");
+  return res;
 };

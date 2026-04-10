@@ -116,4 +116,83 @@ export const adminService = {
       return { data: null, error: { message: "Something went wrong" } };
     }
   },
+
+  getDashboardStats: async () => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/admin/dashboard`, {
+        method: "GET",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store"
+      });
+      const data = await res.json();
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Failed to fetch dashboard stats" } };
+    }
+  },
+
+  createCategory: async (formData: FormData) => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/admin/categories`, {
+        method: "POST",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        return { data: null, error: { message: data.error || "Failed to create category" } };
+      }
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+
+  updateCategory: async (id: string, formData: FormData) => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/admin/categories/${id}`, {
+        method: "PUT",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        return { data: null, error: { message: data.error || "Failed to update category" } };
+      }
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something went wrong" } };
+    }
+  },
+
+  deleteCategory: async (id: string) => {
+    try {
+      const cookieStore = await cookies();
+      const res = await fetch(`${API_URL}/admin/categories/${id}`, {
+        method: "DELETE",
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        return { error: { message: data.error || "Failed to delete category" } };
+      }
+      return { error: null };
+    } catch (error) {
+      return { error: { message: "Something went wrong" } };
+    }
+  }
 };

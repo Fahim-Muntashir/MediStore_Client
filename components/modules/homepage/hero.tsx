@@ -1,81 +1,88 @@
 "use client";
 
-import { Search, ShoppingCart, CheckCircle, Truck, Pill } from "lucide-react";
-
-import { useState } from "react";
+import React from "react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 export function HeroSection() {
-  const [searchQuery, setSearchQuery] = useState("");
-
   return (
-    <section className="relative overflow-hidden bg-secondary py-16 md:py-24 lg:py-32">
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-20 left-10 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-        <div className="absolute bottom-10 right-20 h-48 w-48 rounded-full bg-accent/20 blur-3xl" />
-      </div>
+    <section className="relative pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden bg-background min-h-[calc(100vh-80px)] flex items-center">
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold tracking-wider uppercase mb-6 border border-primary/20">
+                Your Health, Our Priority
+              </span>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground mb-6 leading-[1.1] tracking-tight"
+            >
+              Get Trusted Medicines <br className="hidden md:block"/> <span className="text-primary">Delivered Fast</span>
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg md:text-xl text-muted-foreground mb-10 max-w-xl leading-relaxed"
+            >
+              Explore a wide range of OTC medicines and healthcare products from verified sellers. 100% Genuine, delivered straight to your doorstep.
+            </motion.p>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-col sm:flex-row gap-4 mb-4"
+            >
+              <Button asChild size="lg" className="h-14 px-10 rounded-full font-bold text-lg spotlight shadow-lg transition-transform hover:scale-105">
+                <Link href="/shop">
+                  Shop Medicines
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-14 px-10 rounded-full font-bold text-lg transition-all">
+                <Link href="/shop">
+                  View Offers
+                </Link>
+              </Button>
+            </motion.div>
+          </div>
 
-      <div className="container relative mx-auto px-4">
-        <div className="mx-auto max-w-4xl text-center">
-          <h1 className="mb-6 text-4xl font-bold tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
-            Buy Trusted Medicines Online — Fast & Safe
-          </h1>
-          <p className="mb-8 text-lg text-muted-foreground md:text-xl text-pretty">
-            Explore verified OTC medicines from reliable sellers. Delivered to
-            your doorstep.
-          </p>
-
-          <div className="mx-auto mb-8 flex max-w-xl flex-col gap-3 sm:flex-row">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search for medicines..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-12 pl-10 bg-card border-border text-foreground placeholder:text-muted-foreground"
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative"
+          >
+            <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border bg-secondary/20 aspect-square md:aspect-auto md:h-[600px] w-full">
+              <img
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1000&auto=format&fit=crop"
+                alt="Pharmacy Medicines"
+                className="w-full h-full object-cover"
               />
             </div>
-            <Button size="lg" className="h-12 px-6">
-              <Search className="mr-2 h-4 w-4" />
-              Search Medicines
-            </Button>
-          </div>
+            {/* Decorative element behind image */}
+            <div className="absolute -inset-4 bg-gradient-to-tr from-primary/30 to-emerald-400/30 rounded-[2.5rem] -z-10 blur-xl opacity-70" />
+          </motion.div>
 
-          <div className="mb-10 flex flex-wrap items-center justify-center gap-4 md:gap-8">
-            <Button size="lg" className="gap-2">
-              <ShoppingCart className="h-5 w-5" />
-              Shop Medicines
-            </Button>
-            <Button size="lg" variant="outline" className="gap-2 bg-card">
-              <Search className="h-5 w-5" />
-              Search Medicines
-            </Button>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
-            <div className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-sm border border-border">
-              <CheckCircle className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-foreground">
-                Verified Sellers
-              </span>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-sm border border-border">
-              <Truck className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-foreground">
-                Fast Delivery
-              </span>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-sm border border-border">
-              <Pill className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium text-foreground">
-                1000+ Medicines
-              </span>
-            </div>
-          </div>
         </div>
       </div>
+
+      <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-50" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-50" />
     </section>
   );
 }

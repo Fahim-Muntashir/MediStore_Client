@@ -1,6 +1,6 @@
 import { Logo, LogoImage, LogoText } from "@/components/logo";
 import Link from "next/link";
-import { Pill } from "lucide-react";
+import { Facebook, Instagram, Pill, Twitter } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MenuItem {
@@ -36,51 +36,49 @@ const Footer2 = ({
     url: "https://www.shadcnblocks.com",
   },
   className,
-  tagline = "Medicine Buy made easy",
+  tagline = "Your Trusted Online Pharmacy - Delivering Health to Your Doorstep.",
   menuItems = [
     {
-      title: "Product",
+      title: "Shop",
       links: [
-        { text: "Overview", url: "#" },
-        { text: "Pricing", url: "#" },
-        { text: "Marketplace", url: "#" },
-        { text: "Features", url: "#" },
-        { text: "Integrations", url: "#" },
-        { text: "Pricing", url: "#" },
+        { text: "All Medicines", url: "/shop" },
+        { text: "Prescriptions", url: "/shop?type=prescription" },
+        { text: "Wellness", url: "/shop?category=wellness" },
+        { text: "Personal Care", url: "/shop?category=personal-care" },
       ],
     },
     {
       title: "Company",
       links: [
-        { text: "About", url: "#" },
-        { text: "Team", url: "#" },
-        { text: "Blog", url: "#" },
-        { text: "Careers", url: "#" },
-        { text: "Contact", url: "#" },
-        { text: "Privacy", url: "#" },
+        { text: "About Us", url: "/about" },
+        { text: "Contact", url: "/contact" },
+        { text: "Our Blog", url: "/blog" },
+        { text: "Careers", url: "/about" },
       ],
     },
     {
-      title: "Resources",
+      title: "Support",
       links: [
-        { text: "Help", url: "#" },
-        { text: "Sales", url: "#" },
-        { text: "Advertise", url: "#" },
+        { text: "Help Center", url: "/contact" },
+        { text: "Shipping Info", url: "/contact" },
+        { text: "Returns", url: "/contact" },
+        { text: "FAQs", url: "/contact" },
       ],
     },
     {
-      title: "Social",
+      title: "Contact Info",
       links: [
-        { text: "Twitter", url: "#" },
-        { text: "Instagram", url: "#" },
-        { text: "LinkedIn", url: "#" },
+        { text: "support@medistore.com", url: "mailto:support@medistore.com" },
+        { text: "+1 (555) 123-4567", url: "tel:+15551234567" },
+        { text: "123 Health Ave, NY", url: "https://maps.google.com" },
       ],
     },
   ],
-  copyright = "© 2024 medistore.com. All rights reserved.",
+  copyright = `© ${new Date().getFullYear()} MediStore Inc. All rights reserved.`,
   bottomLinks = [
-    { text: "Terms and Conditions", url: "#" },
-    { text: "Privacy Policy", url: "#" },
+    { text: "Terms of Service", url: "/terms" },
+    { text: "Privacy Policy", url: "/privacy" },
+    { text: "Cookies", url: "/privacy" },
   ],
 }: Footer2Props) => {
   return (
@@ -126,6 +124,20 @@ const Footer2 = ({
                 </li>
               ))}
             </ul>
+          </div>
+          <div className="mt-8 flex justify-center gap-6">
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <span className="sr-only">Facebook</span>
+              <Facebook className="h-6 w-6" />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <span className="sr-only">Twitter</span>
+              <Twitter className="h-6 w-6" />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+              <span className="sr-only">Instagram</span>
+              <Instagram className="h-6 w-6" />
+            </a>
           </div>
         </footer>
       </div>

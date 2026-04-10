@@ -1,48 +1,84 @@
 import { Route } from "@/types";
+import { 
+  Home, 
+  ShoppingBag, 
+  LayoutDashboard, 
+  BarChart3, 
+  Pill, 
+  PlusCircle, 
+  Hash, 
+  ClipboardList, 
+  UserCircle 
+} from "lucide-react";
 
 export const sellerRoutes: Route[] = [
   {
-    title: "Dashboard",
+    title: "Platform",
     items: [
-      {
-        title: "Overview",
-        url: "/dashboard/",
-      },
       {
         title: "Home",
         url: "/",
+        icon: Home,
+      },
+      {
+        title: "Browse Medicine",
+        url: "/shop",
+        icon: ShoppingBag,
       },
     ],
   },
   {
-    title: "Medicine Management",
+    title: "Main",
     items: [
+      {
+        title: "Overview",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "Analytics",
+        url: "/dashboard/analytics",
+        icon: BarChart3,
+      },
+    ],
+  },
+  {
+    title: "Inventory",
+    items: [
+      {
+        title: "Manage Medicines",
+        url: "/dashboard/my-medicines",
+        icon: Pill,
+      },
       {
         title: "Add Medicine",
         url: "/dashboard/add-medicine",
+        icon: PlusCircle,
       },
       {
-        title: "My Medicines",
-        url: "/dashboard/my-medicines",
+        title: "Categories",
+        url: "/dashboard/categories",
+        icon: Hash,
       },
     ],
   },
   {
-    title: "Orders",
+    title: "Sales",
     items: [
       {
-        title: "All Orders",
+        title: "Orders",
         url: "/dashboard/all-orders",
+        icon: ClipboardList,
       },
     ],
   },
-
   {
-    title: "Account",
+    title: "Settings",
     items: [
       {
         title: "Profile",
         url: "/dashboard/profile",
+        icon: UserCircle,
       },
     ],
   },

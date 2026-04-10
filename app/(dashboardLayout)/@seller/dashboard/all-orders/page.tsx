@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getOrdersBySeller, updateOrderStatus } from "@/actions/order.actions";
 import {
   Table,
@@ -81,7 +82,39 @@ const OrdersPage = () => {
     }
   };
 
-  if (loading) return <div className="p-6">Loading orders...</div>;
+  if (loading) {
+    return (
+      <div className="p-6 space-y-4">
+        <h1 className="text-2xl font-bold mb-6">Manage Seller Orders</h1>
+        <div className="border rounded-xl animate-pulse">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+                <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[1, 2, 3, 4, 5].map((i) => (
+                <TableRow key={i}>
+                  <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                  <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                  <TableCell><Skeleton className="h-9 w-32 rounded-lg" /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    );
+  }
   if (error) return <div className="p-6 text-red-500">{error}</div>;
 
   return (

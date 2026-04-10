@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getMedicines } from "@/actions/medicine.actions";
+import { deleteMedicine, getMedicines } from "@/actions/medicine.actions";
 import { MedicineRow } from "@/components/modules/medicine/medicine-row";
 import {
   Table,
@@ -42,12 +42,12 @@ export default function MyMedicinesClient({
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/v1/medicine/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Delete failed");
+      const { error } = await deleteMedicine(id);
+      if (error) throw new Error(error.message);
       setMedicines((prev) => prev.filter((m) => m.id !== id));
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to delete");
+      alert(err.message || "Failed to delete");
     }
   };
 

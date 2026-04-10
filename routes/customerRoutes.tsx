@@ -1,16 +1,26 @@
 import { Route } from "@/types";
+import { 
+  Home, 
+  ShoppingBag, 
+  LayoutDashboard, 
+  Package, 
+  Star, 
+  UserCircle 
+} from "lucide-react";
 
 export const customerRoutes: Route[] = [
   {
-    title: "Dashboard",
+    title: "Platform",
     items: [
-      {
-        title: "Overview",
-        url: "/dashboard",
-      },
       {
         title: "Home",
         url: "/",
+        icon: Home,
+      },
+      {
+        title: "Browse Medicine",
+        url: "/shop",
+        icon: ShoppingBag,
       },
     ],
   },
@@ -18,22 +28,30 @@ export const customerRoutes: Route[] = [
     title: "Account",
     items: [
       {
-        title: "Profile",
-        url: "/dashboard/profile",
+        title: "Overview",
+        url: "/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        title: "My Orders",
+        url: "/dashboard/my-orders",
+        icon: Package,
+      },
+      {
+        title: "My Reviews",
+        url: "/dashboard/reviews",
+        icon: Star,
       },
     ],
   },
   {
-    title: "Orders",
+    title: "Settings",
     items: [
       {
-        title: "My Orders",
-        url: "/dashboard/my-orders",
+        title: "Profile",
+        url: "/dashboard/profile",
+        icon: UserCircle,
       },
-      // {
-      //   title: "Order History",
-      //   url: "/dashboard/orders/history",
-      // },
     ],
   },
 ];

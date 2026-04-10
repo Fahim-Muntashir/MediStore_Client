@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,7 @@ interface Product {
   description: string;
   manufacturer: string;
   sellerId: string;
+  isFeatured: boolean;
   createdAt: string;
   updatedAt: string;
   categories: string[];
@@ -50,10 +52,31 @@ interface MedicineRowProps {
   onDelete?: (id: string) => void;
 }
 
+import { Star } from "lucide-react";
+import { toggleMedicineFeatured } from "@/actions/medicine.actions";
+
 export function MedicineRow({ product, onEdit, onDelete }: MedicineRowProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(product.isFeatured);
   const inStock = product.stock > 0;
   const router = useRouter();
+
+  const handleToggleFeatured = async () => {
+    const newStatus = !isFeatured;
+    const toastId = toast.loading(newStatus ? "Adding to featured..." : "Removing from featured...");
+    
+    try {
+      const { error } = await toggleMedicineFeatured(product.id, newStatus);
+      if (error) {
+        toast.error(error.message, { id: toastId });
+      } else {
+        setIsFeatured(newStatus);
+        toast.success(newStatus ? "Featured successfully!" : "Removed from featured", { id: toastId });
+      }
+    } catch (err) {
+      toast.error("Something went wrong", { id: toastId });
+    }
+  };
 
   const form = useForm({
     defaultValues: {
@@ -103,22 +126,6 @@ export function MedicineRow({ product, onEdit, onDelete }: MedicineRowProps) {
     },
   });
 
-  // Inside MedicineRow
-  const handleDelete = async () => {
-    if (!confirm(`Are you sure you want to delete ${product.name}?`)) return;
-
-    try {
-      const res = await deleteMedicine(product.id); // call your API
-
-      toast.success(
-        `${product.name} has been deleted. Please reload the page to see updates.`,
-      );
-    } catch (err) {
-      console.error(err);
-      toast.error("Something went wrong while deleting the medicine.");
-    }
-  };
-
   const handleOpenEditModal = () => {
     form.reset();
     setIsEditModalOpen(true);
@@ -165,19 +172,31 @@ export function MedicineRow({ product, onEdit, onDelete }: MedicineRowProps) {
           {new Date(product.updatedAt).toLocaleDateString()}
         </td>
 
-        <td className="flex gap-2 p-2">
-          <button
-            onClick={handleOpenEditModal}
-            className="rounded-md bg-blue-600 px-3 py-1 text-white text-sm hover:bg-blue-700 transition"
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete}
-            className="rounded-md bg-red-600 px-3 py-1 text-white text-sm hover:bg-red-700 transition"
-          >
-            Delete
-          </button>
+        <td className="p-2">
+          <div className="flex gap-2">
+            <button
+              onClick={handleToggleFeatured}
+              className={cn(
+                "p-1 rounded-md transition-all",
+                isFeatured ? "text-yellow-500 bg-yellow-50" : "text-gray-400 bg-gray-50 hover:text-yellow-400"
+              )}
+              title={isFeatured ? "Remove from Featured" : "Add to Featured"}
+            >
+              <Star className={cn("h-5 w-5", isFeatured && "fill-current")} />
+            </button>
+            <button
+              onClick={handleOpenEditModal}
+              className="rounded-md bg-blue-600 px-3 py-1 text-white text-sm hover:bg-blue-700 transition"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => onDelete?.(product.id)}
+              className="rounded-md bg-red-600 px-3 py-1 text-white text-sm hover:bg-red-700 transition"
+            >
+              Delete
+            </button>
+          </div>
         </td>
       </tr>
 
