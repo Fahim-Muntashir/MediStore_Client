@@ -16,7 +16,7 @@ export default function CartModal({ cartData }: any) {
   const router = useRouter();
 
   const handleOrderNow = () => {
-    router.push("/shop/checkout"); // change route if needed
+    router.push("/checkout"); // Updated to point to the correct checkout page
   };
 
   return (

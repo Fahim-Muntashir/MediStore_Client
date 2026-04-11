@@ -19,15 +19,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "Shop", href: "/shop" },
-  { name: "Categories", href: "/#categories" },
-  { name: "Orders", href: "/dashboard/customer/orders" },
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/contact" },
-];
+
 
 const categories = [
   { 
@@ -66,6 +58,20 @@ export function Header({ data }: any) {
       (total: number, item: any) => total + item.quantity,
       0,
     ) || 0;
+
+  const dynamicNavLinks = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+    { name: "Categories", href: "/#categories" },
+    ...(data?.role === "CUSTOMER" 
+      ? [{ name: "Orders", href: "/dashboard/my-orders" }] 
+      : (data?.role === "SELLER" || data?.role === "ADMIN") 
+      ? [{ name: "Orders", href: "/dashboard/all-orders" }] 
+      : []),
+    ...(data?.role ? [{ name: "Dashboard", href: "/dashboard" }] : []),
+    { name: "Blog", href: "/blog" },
+    { name: "Contact", href: "/contact" },
+  ];
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b py-3 transition-none">
@@ -111,7 +117,7 @@ export function Header({ data }: any) {
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
-                {navLinks.map((link) => (
+                {dynamicNavLinks.map((link) => (
                   <NavigationMenuItem key={link.name}>
                     <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
                       <Link href={link.href}>
@@ -148,12 +154,16 @@ export function Header({ data }: any) {
                     className="rounded-full bg-secondary/50"
                     onClick={() => setDropdownOpen(!isDropdownOpen)}
                   >
-                    {data.user?.image ? (
-                      <img
-                        src={data.user.image}
-                        alt=""
-                        className="h-8 w-8 rounded-full"
-                      />
+                    {data?.image ? (
+                      <div className="relative flex h-[34px] w-[34px] items-center justify-center group/avatar">
+                        <div className="absolute inset-0 rounded-full bg-primary/30 animate-[ping_2.5s_ease-in-out_infinite]" />
+                        <div className="absolute inset-0 rounded-full ring-2 ring-primary/60 ring-offset-2 ring-offset-background transition-all duration-300 group-hover/avatar:ring-primary group-hover/avatar:ring-offset-4" />
+                        <img
+                          src={data.image}
+                          alt={data.name || "Profile"}
+                          className="relative h-8 w-8 rounded-full object-cover transition-transform duration-300 group-hover/avatar:scale-105"
+                        />
+                      </div>
                     ) : (
                       <User className="h-5 w-5" />
                     )}
@@ -168,10 +178,10 @@ export function Header({ data }: any) {
                       <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-xl bg-card p-2 shadow-xl ring-1 ring-black/5 spotlight animate-in fade-in zoom-in duration-200 z-[100]">
                         <div className="px-3 py-2 mb-2 border-b">
                           <p className="text-sm font-semibold">
-                            {data.user?.name}
+                            {data?.name}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">
-                            {data.user?.email}
+                            {data?.email}
                           </p>
                         </div>
                         <Link
@@ -263,7 +273,7 @@ export function Header({ data }: any) {
                   Menu
                 </h3>
                 <div className="grid grid-cols-1 gap-1">
-                  {navLinks.filter(link => link.name !== "Categories").map((link) => (
+                  {dynamicNavLinks.filter(link => link.name !== "Categories").map((link) => (
                     <Link
                       key={link.name}
                       href={link.href}

@@ -1,9 +1,11 @@
 import { getOrdersByUser } from "@/actions/order.actions";
-import React from "react";
+import React, { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Package, MapPin, Phone, CreditCard, Truck } from "lucide-react";
 import { LeaveReview } from "./LeaveReview";
+import { OrderProgress } from "@/components/modules/order/OrderProgress";
+import { CheckoutSuccess } from "@/components/modules/order/CheckoutSuccess";
 
 // Define types
 type Address = {
@@ -16,7 +18,7 @@ type Address = {
 
 type Item = {
   id: string; // order item id
-  medicineId: string; // ✅ add this
+  medicineId: string;
   name: string;
   price: number;
   quantity: number;
@@ -27,7 +29,7 @@ type Order = {
   userId: string;
   totalPrice: number;
   address: Address;
-  status: "PENDING" | "COMPLETED" | "CANCELLED" | string;
+  status: "PENDING" | "PLACED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED" | string;
   paymentMethod: "cod" | "online";
   items: Item[];
 };
@@ -36,13 +38,18 @@ const Page = async () => {
   const res = await getOrdersByUser();
   const orders: Order[] = res.data || [];
 
-  console.log(orders);
   const getStatusVariant = (status: string) => {
     switch (status) {
       case "PENDING":
         return "secondary";
-      case "COMPLETED":
+      case "PLACED":
         return "default";
+      case "PROCESSING":
+        return "default";
+      case "SHIPPED":
+        return "default";
+      case "DELIVERED":
+        return "outline";
       case "CANCELLED":
         return "destructive";
       default:
@@ -52,6 +59,9 @@ const Page = async () => {
 
   return (
     <div className="min-h-screen bg-muted/40 py-8 px-4 sm:px-6 lg:px-8">
+      <Suspense fallback={null}>
+        <CheckoutSuccess />
+      </Suspense>
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <Package className="h-8 w-8 text-primary" />
@@ -95,6 +105,9 @@ const Page = async () => {
                   </div>
                 </CardHeader>
                 <CardContent className="p-6">
+                  <div className="mb-8 border-b pb-6">
+                    <OrderProgress currentStatus={order.status} />
+                  </div>
                   <div className="grid gap-6 md:grid-cols-2">
                     {/* Order Items */}
                     <div className="space-y-3">

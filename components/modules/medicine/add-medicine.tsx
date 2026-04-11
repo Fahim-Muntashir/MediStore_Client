@@ -23,6 +23,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { createMedicine } from "@/actions/medicine.actions";
 import { getAllCategories } from "@/actions/admin.action";
+import { NMImageUpload } from "@/components/ui/nm-image-upload";
+import { uploadService } from "@/services/upload.service";
 
 const medicineSchema = z.object({
   name: z.string().min(2),
@@ -231,20 +233,25 @@ export default function AddMedicineForm() {
               )}
             />
 
-            {/* Image */}
+            {/* Image Upload */}
             <form.Field
               name="image"
               children={(field) => (
-                <Field>
-                  <FieldLabel>Image URL</FieldLabel>
-                  <Input
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                  {field.state.meta.isTouched && !field.state.meta.isValid && (
-                    <FieldError errors={field.state.meta.errors} />
-                  )}
-                </Field>
+                <NMImageUpload
+                  label="Medicine Image"
+                  value={field.state.value}
+                  onImageUpload={async (file) => {
+                    const toastId = toast.loading("Uploading image...");
+                    const res = await uploadService.uploadImage(file);
+                    if (res.data) {
+                      field.handleChange(res.data);
+                      toast.success("Image uploaded successfully", { id: toastId });
+                    } else {
+                      toast.error(res.error?.message || "Upload failed", { id: toastId });
+                    }
+                  }}
+                  onImageRemove={() => field.handleChange("")}
+                />
               )}
             />
 

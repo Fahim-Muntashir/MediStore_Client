@@ -12,12 +12,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ShieldCheck, Truck, Package, CreditCard, ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function CheckoutPage() {
   const { cart, refreshCart } = useCart();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("cod");
 
   const cartItems = cart?.items || [];
   const subtotal = cartItems.reduce((acc: number, item: any) => acc + (item.medicine.price * item.quantity), 0);
@@ -37,13 +39,16 @@ export default function CheckoutPage() {
         city: formData.get("city") as string,
         postalCode: formData.get("postalCode") as string,
       },
-      paymentMethod: "cod" as const,
+      paymentMethod,
     };
 
     try {
       const { data, error } = await placeOrder(orderData);
       if (error) {
         toast.error(error.message);
+      } else if (data?.url) {
+        refreshCart();
+        window.location.href = data.url;
       } else {
         toast.success("Order placed successfully!");
         refreshCart();
@@ -111,15 +116,37 @@ export default function CheckoutPage() {
                 Payment Method
               </h2>
               
-              <div className="p-6 rounded-2xl border-2 border-primary bg-primary/5 flex items-center gap-4">
-                <div className="h-6 w-6 rounded-full border-4 border-primary flex items-center justify-center">
-                  <div className="h-2 w-2 rounded-full bg-primary" />
+              <div className="space-y-4">
+                <div 
+                  onClick={() => setPaymentMethod("cod")}
+                  className={`p-6 rounded-2xl border-2 cursor-pointer transition-all flex items-center gap-4 ${paymentMethod === "cod" ? "border-primary bg-primary/5" : "border-border bg-card hover:bg-secondary/30"}`}
+                >
+                  <div className={`h-6 w-6 rounded-full border-4 flex items-center justify-center ${paymentMethod === "cod" ? "border-primary" : "border-muted-foreground"}`}>
+                    {paymentMethod === "cod" && <div className="h-2 w-2 rounded-full bg-primary" />}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold">Cash on Delivery (COD)</p>
+                    <p className="text-sm text-muted-foreground">Pay with cash when your medicine is delivered.</p>
+                  </div>
+                  <Truck className={`h-6 w-6 ${paymentMethod === "cod" ? "text-primary" : "text-muted-foreground"}`} />
                 </div>
-                <div className="flex-1">
-                  <p className="font-bold">Cash on Delivery (COD)</p>
-                  <p className="text-sm text-muted-foreground">Pay with cash when your medicine is delivered.</p>
+
+                <div 
+                  onClick={() => setPaymentMethod("online")}
+                  className={`p-6 rounded-2xl border-2 cursor-pointer transition-all flex items-center gap-4 ${paymentMethod === "online" ? "border-primary bg-primary/5" : "border-border bg-card hover:bg-secondary/30"}`}
+                >
+                  <div className={`h-6 w-6 rounded-full border-4 flex items-center justify-center ${paymentMethod === "online" ? "border-primary" : "border-muted-foreground"}`}>
+                    {paymentMethod === "online" && <div className="h-2 w-2 rounded-full bg-primary" />}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold">Stripe Payment</p>
+                      <span className="bg-[#635BFF] text-white text-[10px] px-1.5 py-0.5 rounded font-black uppercase tracking-tighter">Powered by Stripe</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Pay securely with your credit/debit card.</p>
+                  </div>
+                  <CreditCard className={`h-6 w-6 ${paymentMethod === "online" ? "text-primary" : "text-muted-foreground"}`} />
                 </div>
-                <Truck className="h-6 w-6 text-primary" />
               </div>
             </div>
           </div>
@@ -135,7 +162,7 @@ export default function CheckoutPage() {
                     {cartItems.map((item: any) => (
                       <div key={item.id} className="flex gap-4 items-center">
                         <div className="relative h-14 w-14 rounded-xl overflow-hidden bg-secondary/30 shrink-0 border">
-                          <Image src={item.medicine.image} alt="" fill className="object-cover" />
+                          <Image src={item.medicine.image || "/placeholder-medicine.png"} alt={item.medicine.name} fill className="object-cover" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-sm truncate">{item.medicine.name}</p>
@@ -169,8 +196,12 @@ export default function CheckoutPage() {
                     disabled={isSubmitting || cartItems.length === 0}
                     className="w-full h-16 rounded-2xl font-black text-lg spotlight shadow-lg group"
                   >
-                    {isSubmitting ? "Placing Order..." : "Place Order Now"}
-                    {!isSubmitting && <Package className="ml-2 h-5 w-5 transition-transform group-hover:scale-110" />}
+                    {isSubmitting ? "Processing..." : paymentMethod === "online" ? "Pay with Stripe" : "Place Order Now"}
+                    {!isSubmitting && (
+                      paymentMethod === "online" 
+                      ? <CreditCard className="ml-2 h-5 w-5 transition-transform group-hover:scale-110" />
+                      : <Package className="ml-2 h-5 w-5 transition-transform group-hover:scale-110" />
+                    )}
                   </Button>
 
                   <div className="mt-8 pt-8 border-t space-y-4">

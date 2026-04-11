@@ -1,5 +1,12 @@
 import React from "react";
-import { ProductCardSkeleton, StatisticsSkeleton } from "@/components/modules/skeletons";
+import { 
+  ProductCardSkeleton, 
+  StatisticsSkeleton, 
+  ProductGridSkeleton, 
+  BlogPreviewSkeleton,
+  CategoryCardSkeleton,
+  WhyChooseSkeleton
+} from "@/components/modules/skeletons";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
@@ -18,66 +25,40 @@ export default function Loading() {
         </div>
       </div>
 
-      <div className="space-y-20 py-20 bg-background">
+      <div className="space-y-0">
         {/* Categories Skeleton */}
-        <section className="container px-4">
+        <section className="py-24 container px-4">
           <div className="text-center mb-12 space-y-4">
-            <Skeleton className="h-10 w-64 mx-auto" />
-            <Skeleton className="h-4 w-96 mx-auto" />
+            <Skeleton className="h-12 w-80 mx-auto rounded-xl" />
+            <Skeleton className="h-5 w-[600px] mx-auto rounded-md" />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-48 rounded-3xl" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <CategoryCardSkeleton key={i} />
             ))}
           </div>
         </section>
 
-        {/* Product Grid Skeleton (Featured) */}
-        <section className="bg-secondary/20 py-24">
-          <div className="container px-4 space-y-12">
-            <div className="space-y-4">
-              <Skeleton className="h-10 w-80" />
-              <Skeleton className="h-4 w-[500px]" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <ProductCardSkeleton key={i} />
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Featured Products Skeleton */}
+        <ProductGridSkeleton featured={true} />
 
         {/* Why Choose Section Skeleton */}
-        <section className="container px-4 py-12">
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-              <Skeleton className="h-[400px] rounded-3xl" />
-              <div className="space-y-6">
-                <Skeleton className="h-10 w-80" />
-                <div className="grid grid-cols-2 gap-4">
-                  {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32 rounded-2xl" />)}
-                </div>
-              </div>
-           </div>
-        </section>
+        <WhyChooseSkeleton />
+
+        {/* Popular Products Skeleton */}
+        <ProductGridSkeleton />
 
         {/* Statistics Section Skeleton */}
-        <section className="container px-4">
+        <section className="container px-4 py-20">
           <StatisticsSkeleton />
         </section>
-
-        {/* Popular Grid Skeleton */}
-        <section className="py-24">
-          <div className="container px-4 space-y-12">
-            <div className="space-y-4">
-              <Skeleton className="h-10 w-80" />
-              <Skeleton className="h-4 w-[500px]" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((i) => (
-                <ProductCardSkeleton key={i} />
-              ))}
-            </div>
-          </div>
+        
+        {/* Blog Preview Skeleton */}
+        <BlogPreviewSkeleton />
+        
+        {/* Generic Skeletons for the rest */}
+        <section className="container px-4 py-20 space-y-12">
+           <Skeleton className="h-[400px] w-full rounded-[3rem]" />
         </section>
       </div>
     </div>

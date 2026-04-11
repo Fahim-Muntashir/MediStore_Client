@@ -94,7 +94,7 @@ export default async function SellerDashboard() {
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle>Recent Customer Orders</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard/seller/orders">View All</Link>
+            <Link href="/dashboard/all-orders">View All</Link>
           </Button>
         </CardHeader>
         <CardContent>

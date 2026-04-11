@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "../medicine/product-card";
 import Link from "next/link";
+import { ProductCardSkeleton } from "../skeletons";
 
 interface ProductGridSectionProps {
   title: string;
@@ -42,10 +43,10 @@ export function ProductGridSection({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.length > 0 ? (
+          {products && products.length > 0 ? (
             products.map((product, index) => (
               <motion.div
-                key={product.id}
+                key={product.id || index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -55,9 +56,8 @@ export function ProductGridSection({
               </motion.div>
             ))
           ) : (
-            // Skeleton Loader (conceptual)
             Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-[400px] rounded-2xl bg-secondary/50 animate-pulse" />
+              <ProductCardSkeleton key={i} />
             ))
           )}
         </div>

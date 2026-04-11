@@ -14,9 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateProfile } from "@/actions/profile.actions";
 import { useRouter } from "next/navigation";
+import { NMImageUpload } from "@/components/ui/nm-image-upload";
+import { uploadService } from "@/services/upload.service";
 
 export default function UpdateProfileDialog({ profile }: { profile: any }) {
   const [open, setOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState(profile.image || "");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   function handleSubmit(formData: FormData) {
@@ -52,18 +55,42 @@ export default function UpdateProfileDialog({ profile }: { profile: any }) {
         </DialogHeader>
 
         <form action={handleSubmit} className="space-y-4">
-          <label htmlFor="">Name :</label>
-          <Input name="name" defaultValue={profile.name} />
-          <label htmlFor="">Phone :</label>
-          <Input name="phone" defaultValue={profile.phone || ""} />
-          <label htmlFor="">Address :</label>
-          <Textarea
-            name="shippingAddress"
-            defaultValue={profile.shippingAddress || ""}
-          />{" "}
-          <label htmlFor="">Image Url :</label>
-          <Input name="image" defaultValue={profile.image || ""} />
-          <div className="flex justify-end gap-2">
+          <div>
+            <label className="text-sm font-medium mb-1 inline-block">Name :</label>
+            <Input name="name" defaultValue={profile.name} required />
+          </div>
+          
+          <div>
+            <label className="text-sm font-medium mb-1 inline-block">Phone :</label>
+            <Input name="phone" defaultValue={profile.phone || ""} />
+          </div>
+          
+          <div>
+            <label className="text-sm font-medium mb-1 inline-block">Address :</label>
+            <Textarea
+              name="shippingAddress"
+              defaultValue={profile.shippingAddress || ""}
+            />
+          </div>
+
+          <NMImageUpload
+            label="Profile Image"
+            value={imageUrl}
+            onImageUpload={async (file) => {
+              const toastId = toast.loading("Uploading profile image...");
+              const res = await uploadService.uploadImage(file);
+              if (res.data) {
+                setImageUrl(res.data);
+                toast.success("Image uploaded successfully", { id: toastId });
+              } else {
+                toast.error(res.error?.message || "Upload failed", { id: toastId });
+              }
+            }}
+            onImageRemove={() => setImageUrl("")}
+          />
+          <input type="hidden" name="image" value={imageUrl} />
+
+          <div className="flex justify-end gap-2 pt-4">
             <Button
               type="button"
               variant="outline"
@@ -72,7 +99,7 @@ export default function UpdateProfileDialog({ profile }: { profile: any }) {
               Cancel
             </Button>
             <Button type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save"}
+              {isPending ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

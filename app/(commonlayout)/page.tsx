@@ -14,7 +14,7 @@ export default async function Home() {
   const { data: allMedicines } = await medicineService.getAllMedicines();
   const { data: featuredData } = await medicineService.getFeaturedMedicines();
   const { data: popularData } = await medicineService.getPopularMedicines();
-  
+
   // Safely handle potential error or empty data
   const medicines = Array.isArray(allMedicines) ? allMedicines : [];
   const featuredMedicines = Array.isArray(featuredData) ? featuredData : [];
@@ -23,35 +23,30 @@ export default async function Home() {
   return (
     <div className="flex flex-col gap-0">
       <HeroSection />
-      
+
       <div className="space-y-0">
         <CategoriesSection />
-        
-        <ProductGridSection 
-          title="Featured Medicines" 
-          subtitle="Handpicked essential medicines for your daily needs."
-          products={featuredMedicines} 
-          className="bg-secondary/20"
+
+        <ProductGridSection
+          title="Popular Products"
+          subtitle="Top selling products trusted by our customers."
+          products={popularMedicines}
         />
 
         <WhyChooseSection />
 
-        <ProductGridSection 
-          title="Popular Products" 
-          subtitle="Top selling products trusted by our customers."
-          products={popularMedicines} 
-        />
+
 
         <OffersSection />
-        
+
         <StatisticsSection />
-        
+
         <TestimonialsSection />
-        
+
         <BlogPreviewSection />
-        
+
         <FAQSection />
-        
+
         <NewsletterSection />
       </div>
     </div>

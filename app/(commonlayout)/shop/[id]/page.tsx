@@ -14,8 +14,12 @@ import {
   RotateCcw, 
   Pill,
   CheckCircle2,
-  Info
+  Info,
+  Clock,
+  ChevronRight,
+  User
 } from "lucide-react";
+import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductGridSection } from "@/components/modules/homepage/ProductGridSection";
 
@@ -258,5 +262,4 @@ export default async function MedicinePage({
   );
 }
 
-import { ChevronRight, User } from "lucide-react";
-import Link from "next/link";
+

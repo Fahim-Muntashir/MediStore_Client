@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Upload, X, ImageIcon } from "lucide-react";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
@@ -22,18 +22,36 @@ export function NMImageUpload({
 }: NMImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(value || null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (value) {
+      setPreview(value);
+    }
+  }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setPreview(URL.createObjectURL(file));
-    onImageUpload(file);
+    // Show local preview immediately
+    const localUrl = URL.createObjectURL(file);
+    setPreview(localUrl);
+    
+    setIsUploading(true);
+    try {
+      await onImageUpload(file);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const removeImage = () => {
     setPreview(null);
     onImageRemove();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -45,7 +63,7 @@ export function NMImageUpload({
       {!preview ? (
         <div 
           className="relative group border-2 border-dashed border-secondary hover:border-primary/50 transition-colors rounded-2xl h-40 flex flex-col items-center justify-center bg-secondary/10 cursor-pointer overflow-hidden"
-          onClick={() => document.getElementById('image-upload-input')?.click()}
+          onClick={() => fileInputRef.current?.click()}
         >
           <div className="flex flex-col items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
             <div className="p-3 rounded-full bg-secondary/30 group-hover:bg-primary/10">
@@ -55,7 +73,7 @@ export function NMImageUpload({
             <span className="text-xs opacity-60">PNG, JPG or WebP (Max 2MB)</span>
           </div>
           <input 
-            id="image-upload-input"
+            ref={fileInputRef}
             type="file" 
             accept="image/*" 
             className="hidden" 
@@ -75,6 +93,7 @@ export function NMImageUpload({
               size="icon" 
               className="rounded-full"
               onClick={removeImage}
+              type="button"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -82,13 +101,13 @@ export function NMImageUpload({
           <div className="absolute top-2 left-2 px-2 py-1 rounded-md bg-white/80 backdrop-blur-sm text-[10px] font-bold text-black uppercase tracking-wider">
             Preview
           </div>
-        </div>
-      )}
-
-      {isUploading && (
-        <div className="flex items-center gap-2 text-xs text-primary font-medium animate-pulse">
-          <ClockLoader className="h-3 w-3" />
-          Processing image...
+          
+          {isUploading && (
+            <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
+               <ClockLoader className="h-8 w-8 text-primary" />
+               <span className="text-xs font-bold text-primary animate-pulse">Uploading...</span>
+            </div>
+          )}
         </div>
       )}
     </div>

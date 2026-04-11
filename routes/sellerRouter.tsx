@@ -47,12 +47,12 @@ export const sellerRoutes: Route[] = [
     items: [
       {
         title: "Manage Medicines",
-        url: "/dashboard/my-medicines",
+        url: "/dashboard/medicine/my-medicines",
         icon: Pill,
       },
       {
         title: "Add Medicine",
-        url: "/dashboard/add-medicine",
+        url: "/dashboard/medicine/add-medicine",
         icon: PlusCircle,
       },
       {

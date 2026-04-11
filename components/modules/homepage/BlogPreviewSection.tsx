@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { blogService } from "@/services/blog.service";
+import { BlogCardSkeleton } from "../skeletons";
+
 export function BlogPreviewSection() {
   const [posts, setPosts] = useState<any[]>([]);
 
@@ -16,6 +18,7 @@ export function BlogPreviewSection() {
     };
     fetchPosts();
   }, []);
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-4">
@@ -33,46 +36,52 @@ export function BlogPreviewSection() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group flex flex-col bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <img 
-                  src={post.image} 
-                  alt={post.title}
-                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
-                  <div className="flex items-center gap-1">
-                    <User className="h-3 w-3" />
-                    {post.author}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {new Date(post.createdAt || post.date).toLocaleDateString()}
-                  </div>
+          {posts && posts.length > 0 ? (
+            posts.map((post, index) => (
+              <motion.article
+                key={post.id || index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group flex flex-col bg-card border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <img 
+                    src={post.image} 
+                    alt={post.title}
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                  />
                 </div>
-                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-6 flex-1">
-                  {post.excerpt}
-                </p>
-                <Link href={`/blog/${post.id}`} className="inline-flex items-center text-sm font-semibold text-primary group-hover:underline">
-                  Read More
-                  <ArrowRight className="h-4 w-4 ml-1" />
-                </Link>
-              </div>
-            </motion.article>
-          ))}
+                <div className="p-6 flex flex-col flex-1">
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
+                    <div className="flex items-center gap-1">
+                      <User className="h-3 w-3" />
+                      {post.author}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      {new Date(post.createdAt || post.date).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-6 flex-1 line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <Link href={`/blog/${post.id}`} className="inline-flex items-center text-sm font-semibold text-primary group-hover:underline">
+                    Read More
+                    <ArrowRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              </motion.article>
+            ))
+          ) : (
+            Array.from({ length: 3 }).map((_, i) => (
+              <BlogCardSkeleton key={i} />
+            ))
+          )}
         </div>
       </div>
     </section>
