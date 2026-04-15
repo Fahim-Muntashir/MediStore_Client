@@ -34,43 +34,10 @@ OnlineHat is a premium, feature-rich freelancing platform designed to connect ta
 - **Frontend**: Next.js (App Router), TypeScript, Tailwind CSS
 - **Interactions**: Framer Motion, Lucide React Icons
 - **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose
+- **Database**: Postgress with Prisma
 - **Authentication**: JWT (JSON Web Tokens) with Secure Cookies
 - **Payments**: Stripe API
 
-## 🛠️ Getting Started
-
-### Prerequisites
-- Node.js (v18 or higher)
-- MongoDB account
-- Stripe Developer Account
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/onlinehat.git
-   ```
-
-2. Install dependencies for both Client and Server:
-   ```bash
-   # For Client
-   cd medistore_client
-   npm install
-
-   # For Server
-   cd ../Medistore
-   npm install
-   ```
-
-3. Set up environment variables:
-   Create a `.env` file in both directories following the provided `.env.example`.
-
-4. Run the development server:
-   ```bash
-   # From medistore_client
-   npm run dev
-   ```
 
 ## 📄 License
 This project is licensed under the MIT License.
