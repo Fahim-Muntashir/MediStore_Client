@@ -18,6 +18,7 @@ import {
   navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import AISearch from "./AISearch";
 
 
 
@@ -49,9 +50,35 @@ const categories = [
 ];
 
 export function Header({ data }: any) {
+  const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const { cart, loading } = useCart();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <header className="sticky top-0 z-50 w-full bg-background border-b py-3 transition-none">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" className="flex items-center gap-2 group shrink-0">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
+                <Pill className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <span className="text-2xl font-bold tracking-tight text-foreground hidden sm:block">
+                MediStore
+              </span>
+            </Link>
+            <div className="h-11 flex-1 max-w-md bg-secondary/20 rounded-2xl hidden lg:block" />
+            <div className="w-20" />
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   const totalItems =
     cart?.items?.reduce(
@@ -87,13 +114,9 @@ export function Header({ data }: any) {
             </span>
           </Link>
 
-          {/* Search Bar - Hidden on small mobile */}
-          <div className="hidden lg:flex relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input 
-              placeholder="Search medicines, health products..." 
-              className="pl-10 h-10 bg-secondary/50 border-none focus-visible:ring-1 focus-visible:ring-primary"
-            />
+          {/* Search Bar - AI Powered */}
+          <div className="hidden lg:flex flex-1 max-w-md">
+            <AISearch />
           </div>
 
           {/* Desktop Navigation */}
@@ -239,9 +262,8 @@ export function Header({ data }: any) {
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 top-[64px] bg-background border-t z-50 animate-in slide-in-from-top duration-300 overflow-y-auto pb-20">
           <nav className="flex flex-col p-4">
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search medicines..." className="pl-10 h-10 bg-secondary/50 border-none" />
+            <div className="mb-6">
+              <AISearch />
             </div>
 
             <div className="space-y-6">
